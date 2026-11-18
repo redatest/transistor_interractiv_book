@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>الكتاب الحيّ: الترانزستور</title><meta name="color-scheme" content="light dark">
+<style>
+:root{--bg:#6b4a2f;--paper:#f6ecd5;--ink:#2e2a24;--mut:#7a6d58;--b:#1f6fb2;--c:#c4452d;--e:#2e8b57;--g:#d89b00;--edge:#d8c7a0;--tab:#e7d6ac}
+@media(prefers-color-scheme:dark){:root{--bg:#1d1812;--paper:#2b251c;--ink:#efe5cf;--mut:#b3a587;--b:#6cb4f0;--c:#ff8a70;--e:#6fd69c;--g:#f0c040;--edge:#4a3f2c;--tab:#4a3f2c}}
+*{box-sizing:border-box}html,body{height:100%;margin:0}
+body{background:radial-gradient(ellipse at 50% 30%,color-mix(in srgb,var(--bg) 80%,#fff 8%),var(--bg));font-family:"Noto Naskh Arabic","Amiri","Segoe UI",Tahoma,sans-serif;color:var(--ink);overflow:hidden;line-height:1.7}
+#stage{height:100%;overflow:auto;padding:14px 12px calc(86px + env(safe-area-inset-bottom)) ;perspective:1500px;display:flex}
+.book{margin:auto;width:min(1080px,100%);transform:rotateX(14deg);transform-origin:50% 100%;transform-style:preserve-3d;position:relative}
+.spread{display:grid;grid-template-columns:1fr 1fr;background:var(--paper);border-radius:6px;position:relative;
+box-shadow:1px 1px 0 var(--edge),2px 2px 0 #cdbb92,3px 3px 0 var(--edge),4px 4px 0 #cdbb92,5px 5px 0 var(--edge),6px 6px 0 #cdbb92,0 28px 40px rgba(0,0,0,.45)}
+.spread::after{content:"";position:absolute;inset:0 calc(50% - 14px);background:linear-gradient(90deg,transparent,rgba(0,0,0,.22),transparent);pointer-events:none}
+.spread.turn{animation:turn .6s ease both;transform-origin:50% 50%}
+@keyframes turn{from{transform:rotateY(70deg) skewY(2deg);opacity:.15}to{transform:none;opacity:1}}
+.page{padding:22px 26px;min-height:min(560px,calc(100vh - 150px));position:relative;min-width:0}
+.pageA h2{margin:0 0 6px;font-size:1.5rem}.chap{color:var(--mut);font-size:.85rem}
+p{margin:.45em 0}
+.law{background:color-mix(in srgb,var(--paper) 70%,var(--g) 22%);border:2px solid var(--g);border-radius:10px;padding:10px;margin:12px 0;text-align:center;font-size:1.25rem;font-weight:700}
+.note{border-inline-start:4px solid var(--c);background:color-mix(in srgb,var(--paper) 90%,var(--c) 10%);padding:6px 10px;font-size:.88rem;margin-top:12px;border-radius:4px}
+.k-b{color:var(--b);font-weight:700}.k-c{color:var(--c);font-weight:700}.k-e{color:var(--e);font-weight:700}
+bdi{unicode-bidi:isolate}
+.q{margin-top:12px;border:2px dashed var(--mut);border-radius:10px;padding:8px 10px}
+.q b{display:block}.tab{display:block;margin-top:8px;background:var(--tab);border:0;border-radius:4px 4px 14px 4px;padding:6px 12px;font:inherit;color:var(--ink);cursor:pointer;box-shadow:0 2px 0 rgba(0,0,0,.25);transform-origin:right top;transition:transform .5s}
+.q.open .tab{transform:rotate(-8deg) translateY(-3px)}
+.ans{max-height:0;overflow:hidden;transition:max-height .5s;font-size:.92rem}.q.open .ans{max-height:220px;padding-top:8px}
+.pop{perspective:900px;margin:4px auto 0;max-width:420px;position:relative;padding-bottom:14px}
+.card{transform-origin:50% 100%;transform:rotateX(-78deg);transition:transform 1s cubic-bezier(.2,1.4,.4,1);transform-style:preserve-3d;filter:drop-shadow(0 8px 5px rgba(0,0,0,.35));
+background:var(--paper);border:1px solid var(--edge);border-radius:6px}
+.card.up{transform:rotateX(-8deg)}
+.pop::after{content:"";position:absolute;left:8%;right:8%;bottom:4px;height:14px;background:radial-gradient(ellipse,rgba(0,0,0,.35),transparent 70%);transform:scaleX(.4);opacity:0;transition:all 1s}
+.pop.up::after{opacity:1;transform:none}
+svg{display:block;width:100%;height:auto}svg text{font-family:inherit;fill:var(--ink)}
+.ctl{margin-top:10px;display:grid;gap:8px}
+.ctl label{display:flex;justify-content:space-between;gap:8px;font-size:.9rem;flex-wrap:wrap}
+input[type=range]{width:100%;accent-color:var(--c);height:28px}
+.btns{display:flex;gap:8px;flex-wrap:wrap}.btn{border:2px solid var(--ink);background:var(--paper);color:var(--ink);border-radius:8px;padding:6px 12px;font:inherit;cursor:pointer;min-height:40px}
+.btn.on{background:var(--g);color:#222}
+.read{display:flex;gap:10px;flex-wrap:wrap;font-size:.9rem}.read span{background:color-mix(in srgb,var(--paper) 85%,var(--ink) 10%);border-radius:6px;padding:2px 8px}
+.stars{font-size:2rem;color:var(--g);letter-spacing:4px;min-height:2.6rem}
+nav{position:fixed;inset:auto 0 0 0;display:flex;justify-content:center;align-items:center;gap:8px;padding:10px 10px calc(10px + env(safe-area-inset-bottom));background:linear-gradient(transparent,rgba(0,0,0,.55) 40%);z-index:5;flex-wrap:wrap}
+nav .btn{min-width:44px;background:var(--paper)}#dots{color:#fff;min-width:64px;text-align:center}
+.teach .pageA{display:none}.teach .spread{grid-template-columns:1fr}.teach .pop{max-width:760px}.teach .spread::after{display:none}.teach .ctl{font-size:1.15rem}
+@media(max-width:820px){.spread{grid-template-columns:1fr}.spread::after{display:none}.book{transform:rotateX(5deg)}.page{padding:16px 16px;min-height:0}#stage{display:block}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+.card{background:none;border:0}
+.mat{height:min(300px,78vw);position:relative;perspective:650px;border-radius:8px;overflow:hidden;background-color:#1a4a50;background-image:linear-gradient(rgba(214,200,120,.4) 1px,transparent 1px),linear-gradient(90deg,rgba(214,200,120,.4) 1px,transparent 1px);background-size:30px 30px}
+.board{direction:ltr;position:absolute;left:50%;top:50%;width:300px;height:190px;margin:-80px 0 0 -150px;transform-style:preserve-3d;transform:rotateX(54deg) rotateZ(-14deg);background:#0d5a3a;border:3px solid #d9c27a;border-radius:4px;box-shadow:10px 16px 20px rgba(0,0,0,.55)}
+@media(max-width:480px){.board{scale:.82}}
+.cb{position:absolute;transform-style:preserve-3d}.cb>i{position:absolute;display:block;text-align:center;line-height:1.2}
+.t{position:absolute;background:#7fd6a0;opacity:.5}.pad{position:absolute;width:8px;height:8px;border-radius:50%;background:#cfcfcf;border:2px solid #b08d3a}
+.s{position:absolute;color:#e9f4e9;font:700 8px sans-serif;letter-spacing:.4px;white-space:nowrap}
+.band{position:absolute;width:5px;height:10px;background:#ddd;transform:translateZ(10px)}
+.ib{position:absolute;right:10px;bottom:30px;width:12px;height:90px;border:2px solid #e8e0c0;border-radius:3px;display:flex;align-items:flex-end}.ib b{display:block;width:100%;background:var(--c)}
+.st{position:absolute;inset:auto 0 6px;text-align:center;color:#fff;font-size:.85rem;text-shadow:0 1px 3px #000}
+.in{position:absolute;inset:0;transform-style:preserve-3d}.in>i{position:absolute;display:block;text-align:center;line-height:1.2}
+.cb,.pad{animation:drop .7s cubic-bezier(.3,1.6,.5,1) both;animation-delay:calc(var(--i,0)*80ms)}
+@keyframes drop{from{transform:translateZ(120px) scale(.5);opacity:0}to{transform:none;opacity:1}}
+.mat{--k:0;--f:0;cursor:grab;touch-action:pan-y;user-select:none}.mat.drag{cursor:grabbing}
+.sw{position:absolute;inset:0;transform-style:preserve-3d;animation:sway 9s ease-in-out infinite alternate}
+@keyframes sway{from{transform:rotateZ(-3deg) translateY(-2px)}to{transform:rotateZ(3deg) translateY(3px)}}
+.board{transform:rotateX(var(--rx,54deg)) rotateZ(var(--rz,-14deg));transition:transform .2s}.mat.drag .board{transition:none}
+.led{background:color-mix(in srgb,#ffc400 calc(18% + var(--k)*82%),#4a3c14)!important;box-shadow:0 0 calc(10px + var(--k)*34px) calc(var(--k)*12px) rgba(255,196,0,calc(var(--k)*.75));transition:background .4s,box-shadow .4s}
+.rl{transition:background .25s}.on .rl{background:#4d7dff!important}.on .relay{animation:clk .3s}
+@keyframes clk{0%{transform:none}30%{transform:translateZ(-7px) translateY(2px)}65%{transform:translateZ(3px)}100%{transform:none}}
+.t{transition:opacity .4s}.on .t{opacity:1}
+.on .t.h{background:repeating-linear-gradient(90deg,#ffe28a 0 6px,#7fd6a0 6px 14px);background-size:14px 4px;animation:flh calc(1.5s - 1.2s*var(--f)) linear infinite}
+.on .t.v{background:repeating-linear-gradient(0deg,#ffe28a 0 6px,#7fd6a0 6px 14px);background-size:4px 14px;animation:flv calc(1.5s - 1.2s*var(--f)) linear infinite}
+@keyframes flh{to{background-position:14px 0}}@keyframes flv{to{background-position:0 -14px}}
+.ib b{height:calc(var(--f)*100%);transition:height .45s cubic-bezier(.3,1.4,.5,1)}
+.leaf{position:absolute;top:0;bottom:0;width:50%;z-index:4;pointer-events:none;border-radius:4px;background:linear-gradient(90deg,color-mix(in srgb,var(--paper) 80%,#000),var(--paper) 35%);box-shadow:0 0 34px rgba(0,0,0,.4)}
+.leaf.fw{left:0;transform-origin:100% 50%;animation:lf .8s cubic-bezier(.55,0,.3,1) forwards}.leaf.bw{right:0;transform-origin:0 50%;animation:lb .8s cubic-bezier(.55,0,.3,1) forwards}
+@keyframes lf{0%{transform:perspective(1400px) rotateY(0)}75%{opacity:1}100%{transform:perspective(1400px) rotateY(-180deg);opacity:0}}
+@keyframes lb{0%{transform:perspective(1400px) rotateY(0)}75%{opacity:1}100%{transform:perspective(1400px) rotateY(180deg);opacity:0}}
+@media(min-width:821px){.spread.turn{animation:none}}
+.t{height:5px;border-radius:2px;background:color-mix(in srgb,var(--tc) 40%,#0d5a3a);opacity:.9}
+.t.c{--tc:#ff6b5a}.t.b{--tc:#5ab0ff}.t.e{--tc:#6fe39a}.t.sp{--tc:#ffd24a}
+.on .t{box-shadow:0 0 7px var(--tc);background-image:repeating-linear-gradient(90deg,var(--tc) 0 7px,transparent 7px 14px)}
+.on .t.v{background-image:repeating-linear-gradient(0deg,var(--tc) 0 7px,transparent 7px 14px)}
+.on .t.h.r,.on .t.h.l{background-size:14px 5px}.on .t.v.u,.on .t.v.d{background-size:5px 14px}
+.on .t{animation-duration:calc(1.5s - 1.2s*var(--f));animation-timing-function:linear;animation-iteration-count:infinite}
+.on .t.b{animation-duration:calc(1.6s - 1.2s*var(--fb))}
+.on .t.r{animation-name:fr}.on .t.l{animation-name:fl}.on .t.d{animation-name:fd}.on .t.u{animation-name:fu}
+@keyframes fr{to{background-position:14px 0}}@keyframes fl{to{background-position:-14px 0}}@keyframes fd{to{background-position:0 14px}}@keyframes fu{to{background-position:0 -14px}}
+.vl{position:absolute;left:8px;top:8px;display:flex;flex-direction:column;gap:3px;font:700 .8rem sans-serif;background:rgba(0,0,0,.45);padding:4px 8px;border-radius:6px;direction:ltr}
+.teach .mat{height:min(520px,68vh)}.teach .board{scale:1.5}
+.fan,.pu{display:inline-block}.on .fan{animation:spn calc(1.2s - .9s*var(--f)) linear infinite}@keyframes spn{to{transform:rotate(360deg)}}
+.on .pu{animation:pls .4s ease-in-out infinite alternate}@keyframes pls{from{transform:scale(1)}to{transform:scale(1.3)}}
+.t.dv{--tc:#ff9a3c}.div .t.dv{box-shadow:0 0 7px var(--tc);background-image:repeating-linear-gradient(0deg,var(--tc) 0 7px,transparent 7px 14px);background-size:5px 14px;animation:fd .6s linear infinite}
+.t.q{box-shadow:none!important;background-image:none!important;animation:none!important}
+.dm{transition:background .4s,box-shadow .4s}.div .dm{background:#ff7a2a!important;box-shadow:0 0 28px 8px rgba(255,122,42,.7)}
+.sol .ib b{height:calc(var(--vb,0)*100%)}
+.trl{position:absolute;inset:0;transform-style:preserve-3d}
+.cb.stg{animation:none;transition:opacity .4s,transform .6s cubic-bezier(.3,1.6,.5,1)}.cb.stg.off{opacity:0;transform:translateZ(100px) scale(.5)}.pad.stg.off,.s.stg.off{opacity:0}.pad,.s{transition:opacity .4s}
+.ct{color:#fff;background:rgba(0,0,0,.45);padding:0 3px;border-radius:3px;font-size:8px}
+.stt{position:absolute;inset:auto 0 6px;text-align:center;color:#fff;font-size:.85rem;text-shadow:0 1px 3px #000}
+.cb.lv{animation:none;transform:rotateZ(30deg);transform-origin:0 50%;transition:transform .6s cubic-bezier(.3,1.5,.5,1)}.dvt .cb.lv{transform:rotateZ(-30deg)}
+.t.sn{--tc:#5ab0ff}.sol .t.sp.r{box-shadow:0 0 7px var(--tc);background-image:repeating-linear-gradient(90deg,var(--tc) 0 7px,transparent 7px 14px);background-size:14px 5px;animation:fr .9s linear infinite}
+.sol .t.sn.l{box-shadow:0 0 6px var(--tc);background-image:repeating-linear-gradient(90deg,var(--tc) 0 7px,transparent 7px 14px);background-size:14px 5px;animation:fl 1.4s linear infinite}
+.sol .t.sn.u{box-shadow:0 0 6px var(--tc);background-image:repeating-linear-gradient(0deg,var(--tc) 0 7px,transparent 7px 14px);background-size:5px 14px;animation:fu 1.4s linear infinite}
+.div .t.dv.h{background-image:repeating-linear-gradient(90deg,var(--tc) 0 7px,transparent 7px 14px);background-size:14px 5px;animation:fr .6s linear infinite}
+.nod .dmw{opacity:.3}.sa{font-family:inherit;direction:rtl;font-size:9px}.sol .ib{display:none}
+.gg{margin:10px 6px 0;direction:ltr}.gb{position:relative;height:14px;border-radius:7px;background:linear-gradient(90deg,#3c8d5a 0 42.86%,#d8b24a 42.86% 77.14%,#d9654b 77.14%)}.gb .mk{position:absolute;top:-4px;left:50%;width:6px;height:22px;background:#fff;border:1px solid #000;border-radius:3px;transform:translateX(-3px);transition:left .3s}
+.gl{position:relative;height:30px;font-size:.72rem}.gl span{position:absolute;top:2px;transform:translateX(-50%);white-space:nowrap}
+.chips{display:flex;gap:6px;align-items:center;flex-wrap:wrap;font-size:.85rem;margin-top:4px;direction:ltr}.chip{padding:3px 10px;border-radius:12px;border:2px solid var(--mut)}.chip.on{background:var(--g);color:#222;border-color:var(--g)}
+@media(min-width:481px){.sol .board{scale:1.12}}
+.pad.stg{animation:none}
+</style></head><body>
+<svg width="0" height="0" style="position:absolute"><filter id="pn"><feTurbulence baseFrequency=".035" numOctaves="2" seed="4"/><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter></svg>
+<div id="stage"><div class="book"><div class="spread" id="sp"></div></div></div>
+<nav><button class="btn" id="nx" aria-label="التالي">→</button><span id="dots"></span><button class="btn" id="pv" aria-label="السابق">←</button>
+<button class="btn" id="tm">وضع المعلم</button><button class="btn" id="mu" aria-label="كتم">🔊</button></nav>
+<script>
+const $=s=>document.querySelector(s),N=(v,u)=>`<bdi dir="ltr">${v}${u?' '+u:''}</bdi>`;
+const VS=9,VLED=2,R=220,VBE=0.6,IMAX=(VS-VLED)/R*1000; // mA
+let cur=0,mute=false,AC;
+function flip(){if(mute)return;try{AC=AC||new AudioContext();const n=AC.sampleRate*.13,b=AC.createBuffer(1,n,AC.sampleRate),d=b.getChannelData(0);
+for(let i=0;i<n;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/n,3)*.25;const s=AC.createBufferSource();s.buffer=b;const f=AC.createBiquadFilter();f.type='highpass';f.frequency.value=1800;s.connect(f).connect(AC.destination);s.start()}catch(e){}}
+const ink='stroke="var(--ink)" stroke-width="2.2" fill="none" stroke-linecap="round" filter="url(#pn)"';
+function cube(x,y,w,d,h,col,txt='',tc='#fff',fs=9,cls='',ccls='',bcls=''){return `<div class="cb ${bcls}" style="left:${x}px;top:${y}px;width:${w}px;height:${d}px"><div class="in ${ccls}"><i class="${cls}" style="inset:0;transform:translateZ(${h}px);background:${col};color:${tc};font:700 ${fs}px sans-serif;display:flex;align-items:center;justify-content:center">${txt}</i><i style="left:0;top:${d}px;width:${w}px;height:${h}px;transform-origin:top;transform:rotateX(90deg);background:color-mix(in srgb,${col} 72%,#000)"></i><i style="left:${w}px;top:0;width:${h}px;height:${d}px;transform-origin:left;transform:rotateY(-90deg);background:color-mix(in srgb,${col} 50%,#000)"></i></div></div>`}
+function circuit(type,mode){const pn=type=='NPN'?'BC337-40':'BC327-40';
+ const led=cube(215,22,20,20,22,'#4a3c14','','#fff',9,'led')+cube(150,28,46,10,10,'#e8d9b0','')+'<span class="s" style="left:152px;top:44px">R2 220Ω</span><span class="s" style="left:208px;top:48px">LED</span>';
+ const load={L:led,T:led+'<i class="pad" style="left:26px;top:168px;background:#e3b341"></i>',D:led+cube(22,146,24,24,8,'#c9a063','LDR','#222',8),
+ R:cube(172,8,96,66,60,'#1f4fd8','SONGLE<br>SRD-12VDC','#fff',9,'rl','relay')+cube(226,88,36,10,10,'#1a1a1a','')+'<b class="band" style="left:232px;top:88px"></b><span class="s" style="left:228px;top:102px">D1</span><span class="s" style="left:174px;top:78px">K1</span>',
+ M:cube(190,10,64,40,34,'#8a8f98','<span class="fan">✢</span>','#222',22)+'<span class="s" style="left:196px;top:54px">M</span>',
+ P:cube(196,8,56,56,22,'#2a2a2a','<span class="pu">◉</span>','#9ad',22)+'<span class="s" style="left:200px;top:68px">HP</span>',
+ S:cube(150,22,60,14,14,'#e8d9b0','')+'<span class="s" style="left:152px;top:42px">RL 22kΩ</span>'}[mode];
+ const T=(c,d,x,y,w,h)=>`<div class="t ${c} ${d}" style="left:${x}px;top:${y}px;width:${w}px;height:${h}px"></div>`;
+ return `<div class="mat"><div class="sw"><div class="board">
+ ${T('sp h','r',52,31,120,5)}${T('c v','d',200,44,5,100)}${T('c h','l',160,142,45,5)}${T('e h','l',26,142,104,5)}${T('e v','u',26,70,5,77)}${T('b v','u',141,138,5,36)}${T('b h','r',16,170,130,5)}
+ ${cube(8,16,44,54,26,'#1f8a4c','','#fff',12,'tb')}${load}
+ ${cube(118,92,50,26,56,'#141414',pn,'#ececec',10)}
+ ${cube(127,118,4,20,5,'#d0d0d0')}${cube(142,118,4,20,5,'#d0d0d0')}${cube(157,118,4,20,5,'#d0d0d0')}
+ <i class="pad" style="left:125px;top:139px"></i><i class="pad" style="left:140px;top:139px"></i><i class="pad" style="left:155px;top:139px"></i>
+ ${cube(70,165,46,10,10,'#e8d9b0','')}<i class="pad" style="left:8px;top:168px;background:#e3b341"></i>
+ <span class="s" style="left:126px;top:152px;color:#6fe39a;font-size:11px">E</span><span class="s" style="left:141px;top:152px;color:#5ab0ff;font-size:11px">B</span><span class="s" style="left:156px;top:152px;color:#ff6b5a;font-size:11px">C</span>
+ <span class="s" style="left:172px;top:100px">Q1</span><span class="s" style="left:74px;top:179px">${mode=='S'?'RB 2.2MΩ':'R1'}</span><span class="s" dir="rtl" style="left:4px;top:179px;font-family:inherit">${mode=='S'?'':'إصبع'}</span><span class="s" style="left:196px;top:176px">${mode=='S'?'5V':'12V REV A'}</span></div></div>
+ <div class="ib"><b></b></div><div class="vl"></div><div class="st"></div></div>`}
+function attachDrag(m){let x,y,rz=-14,rx=54,d=0;m.onpointerdown=e=>{d=1;x=e.clientX;y=e.clientY;m.setPointerCapture(e.pointerId);m.classList.add('drag')};
+m.onpointermove=e=>{if(!d)return;rz+=(e.clientX-x)*.4;rx=Math.max(30,Math.min(72,rx-(e.clientY-y)*.3));x=e.clientX;y=e.clientY;m.style.setProperty('--rx',rx+'deg');m.style.setProperty('--rz',rz+'deg')};
+m.onpointerup=m.onpointercancel=()=>{d=0;m.classList.remove('drag')}}
+function draw(c,type,rev,k,ic,mode='L',vc){const sig=type+mode;
+ if(c.dataset.sig!=sig){c.innerHTML=circuit(type,mode);c.dataset.sig=sig;c.querySelectorAll('.cb,.pad').forEach((e,i)=>e.style.setProperty('--i',i));attachDrag(c.querySelector('.mat'))}
+ const m=c.querySelector('.mat'),on=ic>0,S=mode=='S',f=Math.min(1,ic/(S?.227:IMAX));m.style.setProperty('--k',k);m.style.setProperty('--f',f);m.style.setProperty('--fb',on?.35+.5*f:0);m.classList.toggle('on',on);
+ c.querySelector('.tb').innerHTML=rev?'−&nbsp;&nbsp;+':'+&nbsp;&nbsp;−';
+ const vbe=on?VBE:0,ledm='LTD'.includes(mode),vce=S?vc:!on?VS:ledm?Math.max(.2,VS-VLED-ic*R/1000):.2;
+ c.querySelector('.vl').innerHTML=`<span style="color:#5ab0ff">V<sub>BE</sub> ${N(vbe.toFixed(1),'V')}</span><span style="color:#ff6b5a">V<sub>CE</sub> ${N(vce.toFixed(S?2:1),'V')}</span>`+(S?`<span style="color:#ffd24a">الهدف ${N('2.5 V')}</span>`:'');
+ c.querySelector('.st').textContent=type+' · '+(mode=='R'?(on?'المرحّل مغلق':'المرحّل مفتوح'):(on?'يوصّل':'لا يوصّل'))}
+const XS=[200,128,56];
+function fmtI(mA){return mA>=1?N(mA.toFixed(1),'mA'):N((mA*1000).toFixed(0),'µA')}
+function darl(c,n,ibUA){const T=(cl,d,x,y,w,h,st='')=>`<div class="t ${cl} ${d}" style="left:${x}px;top:${y}px;width:${w}px;height:${h}px;${st}"></div>`;
+ if(c.dataset.sig!='DAR'){let st='';XS.forEach((x,i)=>{const k=i+1;st+=cube(x,96,38,22,30,'#141414','Q'+k+' BC547','#ececec',7,'','','stg')+['E','B','C'].map((l,j)=>`<i class="pad stg" data-k="${k}" style="left:${x+j*13+1}px;top:139px"></i><span class="s stg" data-k="${k}" style="left:${x+j*13+2}px;top:124px;color:${['#6fe39a','#5ab0ff','#ff6b5a'][j]};font-size:10px">${l}</span>`).join('')+`<span class="s ct" data-k="${k}" style="left:${x-4}px;top:43px"></span>`});
+ c.innerHTML=`<div class="mat dar"><div class="sw"><div class="board"><div class="trl"></div>${cube(8,16,44,54,26,'#1f8a4c','+ &nbsp; −','#fff',12)}${cube(215,26,30,10,10,'#e8d9b0','')}${cube(256,20,20,20,22,'#4a3c14','','#fff',9,'led')}<i class="pad" style="left:274px;top:166px;background:#e3b341"></i><span class="s" dir="rtl" style="left:262px;top:176px;font-family:inherit">إصبع</span>${st}</div></div><div class="vl"></div><div class="stt"></div></div>`;c.dataset.sig='DAR';c.dataset.n=0;c.querySelectorAll('.cb:not(.stg),.pad:not(.stg)').forEach((e,i)=>e.style.setProperty('--i',i));attachDrag(c.querySelector('.mat'))}
+ const m=c.querySelector('.mat'),g=[1,2,3].map(k=>Math.pow(BETA,k)*ibUA/1000),ic=Math.min(g[n-1],IMAX);
+ if(+c.dataset.n!=n){c.dataset.n=n;
+  c.querySelectorAll('.stg').forEach(e=>e.classList.toggle('off',+(e.dataset.k||e.querySelector?.('i')?.dataset?.k||0)>n));
+  c.querySelectorAll('.cb.stg').forEach((e,i)=>e.classList.toggle('off',i+1>n));
+  const L=XS[n-1];let h='';
+  h+=T('b h','l',216,170,60,5,'--k:0')+T('b v','u',216,139,5,36);
+  for(let i=1;i<n;i++){const a=XS[i-1]+1,b2=XS[i]+14;h+=T('b v','d',a,139,5,16,`--s:${i}`)+T('b h','l',b2,150,a-b2+5,5,`--s:${i}`)+T('b v','u',b2,139,5,16,`--s:${i}`)}
+  XS.slice(0,n).forEach((x,i)=>h+=T('c v','d',x+27,60,5,84,`--s:${i+1}`));
+  h+=T('c h','l',L+27,60,236-L,5,`--s:${n}`)+T('c v','d',261,40,5,25,`--s:${n}`)+T('sp h','r',52,31,165,5,`--s:${n}`);
+  h+=T('e v','d',L+1,139,5,42,`--s:${n}`)+T('e h','l',26,176,L-20,5,`--s:${n}`)+T('e v','u',26,70,5,111,`--s:${n}`);
+  c.querySelector('.trl').innerHTML=h;
+  c.querySelectorAll('.stg').forEach(e=>{const k=+e.dataset.k;if(k)e.classList.toggle('off',k>n)})}
+ m.classList.add('on');m.style.setProperty('--k',ic/IMAX);
+ c.querySelectorAll('.trl .t').forEach(t=>{const sI=+(t.style.getPropertyValue('--s')||0);t.style.setProperty('--f',sI?Math.min(1,g[Math.min(sI,n)-1]/IMAX):Math.min(1,.25+ibUA/60))});
+ c.querySelectorAll('.ct').forEach(e=>{const k=+e.dataset.k;e.textContent=k<=n?`Q${k}: ${g[k-1]>IMAX?'≥ '+IMAX.toFixed(1)+' mA':fmtI(g[k-1]).replace(/<[^>]+>/g,'')}`:'';e.classList.toggle('off',k>n)});
+ c.querySelector('.vl').innerHTML=`<span style="color:#5ab0ff">I<sub>B</sub> ${N(ibUA.toFixed(1),'µA')}</span><span style="color:#ff6b5a">β<sub>كلي</sub> ${N(Math.pow(BETA,n).toLocaleString('en'))}</span>`;
+ c.querySelector('.stt').textContent=n+' ترانزستور · I_C = '+(g[n-1]>IMAX?IMAX.toFixed(1)+' mA (حدّ الحِمل)':ic.toFixed(2)+' mA')}
+function solar(c,v,dv,dm){const T=(cl,d,x,y,w,h,st='')=>`<div class="t ${cl} ${d}" style="left:${x}px;top:${y}px;width:${w}px;height:${h}px;${st}"></div>`;
+ if(c.dataset.sig!='SOL'){c.innerHTML=`<div class="mat sol"><div class="sw"><div class="board">
+ ${T('sp h','r',66,40,58,5)}${T('c h','r',182,78,60,5)}${T('c v','d',240,78,5,42)}${T('dv h','r',182,8,30,5)}${T('sn h','l',156,138,56,5)}${T('sn v','u',117,90,5,38)}
+ ${cube(8,16,58,78,12,'#2b5fd0','18V','#fff',12)}${cube(104,62,40,28,28,'#1f4fd8','K1<br>12V','#fff',8,'rl','relay')}${cube(120,38,64,5,5,'#ececec','','#000',8,'','','lv')}${cube(212,6,64,28,14,'#d8b27c','100R 5W','#222',8,'dm','dmw')}${cube(212,120,64,36,22,'#8c8c1e','12V','#fff',12)}${cube(84,128,72,26,30,'#141414','BC547 + 1k','#ececec',8)}
+ <i class="pad" style="left:180px;top:75px"></i><i class="pad" style="left:180px;top:5px"></i>
+ <span class="s sa" style="left:12px;top:98px">اللوح الشمسي</span><span class="s sa" style="left:100px;top:93px">المرحّل</span><span class="s sa" style="left:216px;top:36px">حِمل وهمي</span><span class="s sa" style="left:216px;top:160px">البطارية</span><span class="s sa" style="left:90px;top:158px">المنظّم</span><span class="s sa" style="left:186px;top:88px;color:#ffd24a">شحن</span><span class="s sa" style="left:186px;top:12px;color:#ffb36b">تحويل</span><span class="s sa" style="left:158px;top:142px;color:#8cc8ff">قياس الجهد</span></div></div>
+ <div class="vl"></div><div class="st"></div></div>`;c.dataset.sig='SOL';c.querySelectorAll('.cb:not(.lv),.pad').forEach((e,i)=>e.style.setProperty('--i',i));attachDrag(c.querySelector('.mat'))}
+ const m=c.querySelector('.mat');m.style.setProperty('--f',.6);m.classList.toggle('on',!dv);m.classList.toggle('dvt',dv);m.classList.toggle('div',dv&&dm);m.classList.toggle('nod',!dm);
+ c.querySelector('.vl').innerHTML=`<span style="color:#ffd24a">V<sub>batt</sub> ${N(v.toFixed(1),'V')}</span><span style="color:#ff9a3c">${dv?'الشحن متوقف':'الشحن جارٍ'}</span>`;
+ c.querySelector('.st').textContent=dv?(dm?'المفتاح حوّل اللوح إلى الحِمل الوهمي':'المفتاح فصل اللوح (بلا حِمل)'):'المفتاح يوصل اللوح بالبطارية'}
+function setup(el){const c=el.querySelector('.card'),p=el.querySelector('.pop');setTimeout(()=>{c.classList.add('up');p.classList.add('up')},80)}
+function qa(q,a){return `<div class="q"><b>توقّع: ${q}</b><button class="tab" onclick="this.parentNode.classList.toggle('open')">ارفع اللسان ▸</button><div class="ans">${a}</div></div>`}
+const BETA=200;
+function calc1(p){const Rf=20000+Math.pow(1-p/100,2)*2000000,Ib=(VS-VBE)/Rf,Ic=Math.min(BETA*Ib*1000,IMAX);return{Rf,Ib:Ib*1e6,Ic}}
+const CH=[
+{t:'الفصل ١ — كيف يضيء إصبعٌ مصباحاً؟',
+A:()=>`<div class="chap">ص ٣ و ٢٧ من الكتاب</div><h2>إصبعك مفتاح!</h2>
+<p>تلمس سلكين فيضيء الـ ${N('LED')} ويزداد سطوعه كلما ضغطتَ أقوى. تيار صغير في القاعدة ${'<span class="k-b">B</span>'} يتحكم بتيار أكبر بين المجمّع <span class="k-c">C</span> والباعث <span class="k-e">E</span>.</p>
+<div class="law">I<sub>C</sub> = β × I<sub>B</sub></div>
+<p>الكتاب: التضخيم نحو ${N('100')} مرة (ص٣)، وفي «أبسط دارة» نحو ${N('200')} (ص٢٧). نستعمل ${N('β = 200')}.</p>
+${qa('أنت تضغط أقوى على السلكين. ماذا يحدث لمقاومة إصبعك ولتيار القاعدة؟','تقلّ مقاومة الإصبع، فيزداد تيار القاعدة، فيزداد تيار المجمّع ويسطع الـ LED (ص٣، الشكل F).')}
+<div class="note">ملاحظة: الترانزستور لا «يُشغَّل» بالجهد وحده، بل بتيار يدخل القاعدة. في الكتاب (ص٥٠): كاشف الكذب، كلما ضغطتَ أقوى أضاءت LEDs أكثر.</div>`,
+B:()=>`<div class="pop"><div class="card"></div></div><div class="ctl"><label>قوة الضغط <input id="s1" type="range" min="0" max="100" value="10"></label><div class="read" id="r1"></div></div>`,
+init(el){const s=el.querySelector('#s1'),r=el.querySelector('#r1'),c=el.querySelector('.card');const f=()=>{const v=calc1(+s.value);draw(c,'NPN',0,v.Ic/IMAX,v.Ic);
+r.innerHTML=`<span>R إصبع ${N((v.Rf/1000).toFixed(0),'kΩ')}</span><span>I<sub>B</sub> ${N(v.Ib.toFixed(1),'µA')}</span><span>I<sub>C</sub> ${N(v.Ic.toFixed(2),'mA')}</span><span>I<sub>max</sub> ${N(IMAX.toFixed(1),'mA')}</span>`};s.oninput=f;f()}},
+{t:'الفصل ٢ — NPN أم PNP؟',
+A:()=>`<div class="chap">ص ١ و ٢١–٢٤</div><h2>النوعان ولا لَبس</h2>
+<p>الترانزستور إمّا <b>NPN</b> وإمّا <b>PNP</b>، مثل BC547 وBC557. في الاختبار (ص٢٤) نقلب البطارية لاختبار PNP.</p>
+<div class="law">NPN ⇄ PNP : القطبية معكوسة</div>
+<p>NPN: الموجب جهة المجمّع ويُغذّى المسرى B بتيار موجب. PNP: العكس تماماً.</p>
+${qa('وصلتَ ترانزستور PNP كما تصل NPN (الموجب جهة المجمّع) وضغطتَ بقوة. هل يضيء الـ LED؟','لا. يبقى مطفأً لأن PNP يحتاج بطارية معكوسة. جرّب في المختبر: اختر PNP ثم اقلب البطارية.')}
+<div class="note">خطأ شائع: الظنّ أن النوعين يعملان بنفس التوصيل. الصحيح أنهما متكاملان.</div>`,
+B:()=>`<div class="pop"><div class="card"></div></div><div class="ctl"><div class="btns"><button class="btn on" data-t="NPN">NPN</button><button class="btn" data-t="PNP">PNP</button><button class="btn" id="rv">اقلب البطارية</button></div>
+<label>قوة الضغط <input id="s2" type="range" min="0" max="100" value="60"></label><div class="read" id="r2"></div></div>`,
+init(el){let ty='NPN',rev=0;const s=el.querySelector('#s2'),r=el.querySelector('#r2'),c=el.querySelector('.card');
+const f=()=>{const ok=(ty=='NPN')!==!!rev,v=calc1(+s.value),ic=ok?v.Ic:0;draw(c,ty,rev,ic/IMAX,ic);
+r.innerHTML=`<span>${ty}</span><span>${rev?'بطارية معكوسة':'بطارية عادية'}</span><span>I<sub>B</sub> ${N(ok?v.Ib.toFixed(1):'0.0','µA')}</span><span>I<sub>C</sub> ${N(ic.toFixed(2),'mA')}</span>`};
+el.querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>{ty=b.dataset.t;el.querySelectorAll('[data-t]').forEach(x=>x.classList.toggle('on',x==b));f()});
+el.querySelector('#rv').onclick=e=>{rev^=1;e.target.classList.toggle('on',!!rev);f()};s.oninput=f;f()}},
+{t:'الفصل ٣ — ترانزستوران معاً',
+A:()=>`<div class="chap">ص ٢٤ و ٢٨</div><h2>تضخيم فوق تضخيم</h2>
+<p>نضيف ترانزستوراً ثانياً مكان الإصبع فيُضخَّم التيار مرة أخرى. هذا هو «الزوج الفائق» (Darlington) في الكتاب.</p>
+<div class="law">β<sub>كلي</sub> = β₁ × β₂ × β₃</div>
+<p>الكتاب: ${N('200 × 200')} لترانزستورين، و${N('200 × 200 × 200 = 8 000 000')} لثلاثة (ص٢٨). حتى كهرباء الجو الساكنة تُكتشف.</p>
+${qa(`بترانزستورين، هل يصبح التضخيم الكلي ${N("400")} أم ${N("40 000")}؟`,`يُضرب ولا يُجمع: ${N("200 × 200 = 40 000")}.`)}
+<div class="note">خطأ شائع: جمع التضخيمين بدل ضربهما.</div>`,
+B:()=>`<div class="pop"><div class="card"></div></div><div class="ctl"><div class="btns"><button class="btn on" data-n="1">١ ترانزستور</button><button class="btn" data-n="2">٢</button><button class="btn" data-n="3">٣</button></div><label>قوة اللمس <input id="s4" type="range" min="0" max="100" value="0"></label><div class="read" id="r4"></div></div>`,
+init(el){let n=1;const s=el.querySelector('#s4'),r=el.querySelector('#r4'),c=el.querySelector('.card');
+const f=()=>{const Rf=calc1(+s.value).Rf,Ib=(VS-n*VBE)/Rf,g=Math.pow(BETA,n),Ic=Math.min(g*Ib*1000,IMAX);darl(c,n,Ib*1e6);
+r.innerHTML=`<span>β<sub>كلي</sub> ${N(g.toLocaleString('en'))}</span><span>I<sub>B</sub> ${N((Ib*1e6).toFixed(1),'µA')}</span><span>I<sub>C</sub> ${N(Ic.toFixed(2),'mA')}</span>`};
+el.querySelectorAll('[data-n]').forEach(b=>b.onclick=()=>{n=+b.dataset.n;el.querySelectorAll('[data-n]').forEach(x=>x.classList.toggle('on',x==b));f()});s.oninput=f;f()}},
+{t:'الفصل ٤ — أين نستعمله؟',
+A:()=>`<div class="chap">فهرس الكتاب وص ٥٠</div><h2>مفتاح أو مضخّم</h2>
+<p>في دارات الكتاب يعمل الترانزستور مفتاحاً (تيار القاعدة يفتح الحمل أو يغلقه) أو مضخّماً (إشارة صغيرة تصير كبيرة). أمثلة من الفهرس: Touch Switch وDark Detector وMotor Speed Controller وH-Bridge وAudio Amplifier.</p>
+<div class="law">I<sub>B</sub> = (V<sub>in</sub> − V<sub>BE</sub>) / R<sub>B</sub></div>
+<p>مثال ص٥٠ (مفتاح اللمس): مقاومة الجلد تمرّر تياراً صغيراً إلى الزوج الفائق فيشغّل ترانزستور BC557، ثم تُبقي المقاومة ${N('4M7')} الدارة شغّالة. ولإطفائها يُلمس لوحا OFF.</p>
+${qa(`جهد الدخل ${N("0.4 V")} فقط عبر ${N("10 kΩ")}. هل يدور المحرك؟`,`لا. تحت ${N("0.6 V")} لا يدخل تيار القاعدة، فيبقى I<sub>C</sub> صفراً.`)}
+<div class="note">تنبيه: عروض المختبر تبيّن المبدأ نفسه لكل حِمل؛ أسماء الأمثلة من فهرس الكتاب وقيم الحمل ليست من الكتاب، واللمس هنا يُمثَّل بجهد على منزلق وليس دارة ص٥٠ كاملة.</div>`,
+B:()=>`<div class="pop"><div class="card"></div></div><div class="ctl"><div class="btns"><button class="btn on" data-u="0">مفتاح لمس</button><button class="btn" data-u="1">كاشف الظلام</button><button class="btn" data-u="2">محرك</button><button class="btn" data-u="3">مكبّر صوت</button><button class="btn" data-u="4">مرحّل</button></div><label><span>V<sub>in</sub></span> <input id="s5" type="range" min="0" max="30" value="3"></label><div class="read" id="r5"></div></div>`,
+init(el){let u=0;const names=['المصباح','الإنذار','المحرك','السماعة','المرحّل'],s=el.querySelector('#s5'),r=el.querySelector('#r5'),c=el.querySelector('.card');
+const f=()=>{const v=s.value/10,Ib=Math.max(0,(v-VBE)/10000),Ic=Math.min(BETA*Ib*1000,IMAX),on=Ic>=IMAX;draw(c,'NPN',0,Ic/IMAX,Ic,'TDMPR'[u]);
+r.innerHTML=`<span>V<sub>in</sub> ${N(v.toFixed(1),'V')}</span><span>I<sub>B</sub> ${N((Ib*1e6).toFixed(1),'µA')}</span><span>I<sub>C</sub> ${N(Ic.toFixed(2),'mA')}</span><span>${names[u]}: ${Ic<=0?'مطفأ':on?'يعمل كاملاً':'جزئي'}</span>`};
+el.querySelectorAll('[data-u]').forEach(b=>b.onclick=()=>{u=+b.dataset.u;el.querySelectorAll('[data-u]').forEach(x=>x.classList.toggle('on',x==b));f()});s.oninput=f;f()}},
+{t:'الفصل ٥ — الشاحن الشمسي',
+A:()=>`<div class="chap">ص ١٨</div><h2>متى يتوقف الشحن؟</h2>
+<p>لوح شمسي ${N('18 V')} يشحن بطارية ${N('12 V')}. لكي لا تُشحن أكثر من اللازم نضيف منظّماً (الكتاب ص١٨).</p>
+<p>المقاومة المتغيّرة تضبط ${N('13.7 V')} الذي يسقط عنده المرحّل. ويعود الشحن عند نحو ${N('12.5 V')}.</p>
+<div class="law">P = V² / R</div>
+<p>الحِمل الوهمي ${N('100 Ω')} (${N('5 W')}) يمتص ${N('18² / 100 ≈ 3.25 W')}، وهذا أقصى ما ينتجه اللوح معه.</p>
+${qa(`وصل جهد البطارية إلى ${N('13.7 V')}. هل يستمر الشحن؟ وإذا نزل الجهد إلى ${N('13 V')} هل يعود؟`,`لا يستمر. ولا يعود عند ${N('13 V')} بل عند نحو ${N('12.5 V')} فقط (ص١٨). جرّب المنزلق صعوداً ثم نزولاً.`)}
+<div class="note">تنبيه: اللوح يجب أن يعطي ${N('16 V')} على الأقل بلا حِمل (٢٥–٢٨ خلية). الرسم يُظهر ٢٤ خلية، والكتاب نفسه يقول إنها يجب أن تكون ٢٨.</div>`,
+B:()=>`<div class="pop"><div class="card"></div></div><div class="gg"><div class="gb"><b class="mk" id="mk"></b></div><div class="gl"><span style="left:0%">11</span><span style="left:42.86%">12.5</span><span style="left:77.14%">13.7</span><span style="left:100%">14.5</span><span style="left:60%;top:14px;font-size:.68rem">نطاق الذاكرة</span></div></div><div class="chips"><span class="chip on" id="cA">الشحن جارٍ</span><span>${N('≥ 13.7 V')} ⟶</span><span class="chip" id="cB">الشحن متوقف</span><span>⟵ ${N('≤ 12.5 V')}</span></div><div class="ctl"><label><span>V<sub>batt</sub></span> <input id="s6" type="range" min="110" max="145" value="125"></label><div class="btns"><button class="btn on" id="dm">مع الحِمل الوهمي</button></div><div class="read" id="r6"></div></div>`,
+init(el){let dv=false,dm=true;const s=el.querySelector('#s6'),r=el.querySelector('#r6'),c=el.querySelector('.card'),mk=el.querySelector('#mk');
+const f=()=>{const v=s.value/10;if(v>=13.7)dv=true;else if(v<=12.5)dv=false;solar(c,v,dv,dm);mk.style.left=((v-11)/3.5*100)+'%';el.querySelector('#cA').classList.toggle('on',!dv);el.querySelector('#cB').classList.toggle('on',dv);
+r.innerHTML=`<span>V<sub>batt</sub> ${N(v.toFixed(1),'V')}</span><span>${dv?'الشحن متوقف':'الشحن جارٍ'}</span>`+(dv&&dm?`<span>P ${N((18*18/100).toFixed(2),'W')}</span>`:'')};
+el.querySelector('#dm').onclick=e=>{dm=!dm;e.target.classList.toggle('on',dm);e.target.textContent=dm?'مع الحِمل الوهمي':'بدون الحِمل الوهمي';f()};s.oninput=f;f()}},
+{t:'الفصل ٦ — تحدّي نصف الجهد',
+A:()=>`<div class="chap">ص ٣ — التحيّز الذاتي</div><h2>اضبط المجمّع على النصف</h2>
+<p>في مرحلة الباعث المشترك نختار مقاومة القاعدة <b>R<sub>B</sub></b> حتى يصير جهد المجمّع نصف جهد المصدر: ${N('2.5 V')} من ${N('5 V')} مع حِمل ${N('22 kΩ')}.</p>
+<div class="law">V<sub>C</sub> = V<sub>CC</sub> − I<sub>C</sub> × R<sub>L</sub></div>
+<p>الكتاب يقول إن R<sub>B</sub> قرابة ${N('2.2 MΩ')} (ص٣).</p>
+${qa('كلما صغّرتَ R<sub>B</sub> ماذا يفعل جهد المجمّع؟',`يزداد تيار القاعدة والمجمّع فيهبط V<sub>C</sub>. وبـ R<sub>B</sub> كبيرة جداً يقترب V<sub>C</sub> من ${N('5 V')}.`)}
+<div class="note">تنبيه للمعلم: الكتاب لا يحدد β ولا V<sub>BE</sub> هنا؛ استعملنا ${N('β = 57')} و${N('0.6 V')} لتطابق ${N('2.2 MΩ')}.</div>`,
+B:()=>`<div class="pop"><div class="card"></div></div><div class="ctl"><label><span>R<sub>B</sub></span> <input id="s3" type="range" min="0" max="100" value="30"></label><div class="read" id="r3"></div><div class="btns"><button class="btn" id="ck">تحقّق ✓</button></div><div class="stars" id="st"></div></div>`,
+init(el){const s=el.querySelector('#s3'),r=el.querySelector('#r3'),g=el.querySelector('.card'),st=el.querySelector('#st');
+const calc=()=>{const Rb=1e5*Math.pow(100,s.value/100),Ib=(5-VBE)/Rb,Ic=Math.min(57*Ib,5/22000),Vc=Math.max(.2,5-Ic*22000);return{Rb,Ib:Ib*1e6,Ic:Ic*1e6,Vc}};
+const f=()=>{const v=calc();draw(g,'NPN',0,0,v.Ic/1000,'S',v.Vc);
+r.innerHTML=`<span>R<sub>B</sub> ${N(v.Rb>=1e6?(v.Rb/1e6).toFixed(2)+' MΩ':(v.Rb/1e3).toFixed(0)+' kΩ')}</span><span>I<sub>B</sub> ${N(v.Ib.toFixed(2),'µA')}</span><span>I<sub>C</sub> ${N(v.Ic.toFixed(0),'µA')}</span><span>V<sub>C</sub> ${N(v.Vc.toFixed(2),'V')}</span>`;st.textContent=''};
+el.querySelector('#ck').onclick=()=>{const d=Math.abs(calc().Vc-2.5),n=d<.1?3:d<.3?2:d<.6?1:0;st.innerHTML=('★'.repeat(n)+'☆'.repeat(3-n))+`<div style="font-size:.9rem">${n==3?'ممتاز! V<sub>C</sub> قرب النصف.':'اقترب من '+N('2.5 V')+' وأعد المحاولة.'}</div>`};
+s.oninput=f;f()}}
+];
+function show(i,anim=true){const prev=cur;cur=Math.max(0,Math.min(CH.length-1,i));const sp=$('#sp'),c=CH[cur];
+sp.innerHTML=`<section class="page pageA">${c.A()}</section><section class="page pageB"><div class="chap">${c.t}</div>${c.B()}</section>`;
+c.init(sp.querySelector('.pageB'));setup(sp.querySelector('.pageB'));
+if(anim){sp.classList.remove('turn');void sp.offsetWidth;sp.classList.add('turn');flip();if(innerWidth>820&&!document.body.classList.contains('teach')){const l=document.createElement('div');l.className='leaf '+(cur>=prev?'fw':'bw');sp.appendChild(l);l.onanimationend=()=>l.remove()}}
+$('#dots').innerHTML=N((cur+1)+' / '+CH.length);$('#pv').disabled=cur==0;$('#nx').disabled=cur==CH.length-1;$('#stage').scrollTo(0,0)}
+$('#nx').onclick=()=>show(cur+1);$('#pv').onclick=()=>show(cur-1);
+$('#tm').onclick=e=>{document.body.classList.toggle('teach');e.target.classList.toggle('on')};
+$('#mu').onclick=e=>{mute=!mute;e.target.textContent=mute?'🔇':'🔊'};
+addEventListener('keydown',e=>{if(e.key=='ArrowLeft')show(cur+1);if(e.key=='ArrowRight')show(cur-1)});
+let x0;addEventListener('touchstart',e=>x0=e.touches[0].clientX,{passive:true});
+addEventListener('touchend',e=>{const d=e.changedTouches[0].clientX-x0;if(Math.abs(d)>70&&!e.target.closest('input,.mat'))show(cur+(d<0?1:-1))},{passive:true});
+show(0,false);
+</script></body></html>

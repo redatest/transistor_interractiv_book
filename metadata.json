@@ -1,0 +1,6 @@
+{
+  "name": "Le Livre Vivant : Circuits à Transistors",
+  "description": "Manuel interactif et laboratoire de simulation électronique inspiré de 1-100 Transistor Circuits — schémas animés, platine 3D, oscilloscope et outils de test.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

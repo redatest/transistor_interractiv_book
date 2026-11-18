@@ -1,0 +1,127 @@
+@import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
+
+@layer base {
+  :root {
+    --font-sans: "Plus Jakarta Sans", "IBM Plex Sans Arabic", system-ui, -apple-system, sans-serif;
+    --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, monospace;
+  }
+
+  html {
+    font-family: var(--font-sans);
+    scroll-behavior: smooth;
+  }
+
+  html[dir="rtl"] {
+    font-family: "IBM Plex Sans Arabic", "Plus Jakarta Sans", system-ui, sans-serif;
+  }
+
+  body {
+    background-color: #f6f4ef;
+    color: #1c1917;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .dark body {
+    background-color: #0e1318;
+    color: #edeae2;
+  }
+}
+
+.font-mono-num {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Workbench cutting mat background for 3D PCB stage */
+.workbench-mat {
+  background-color: #133b3f;
+  background-image:
+    linear-gradient(rgba(218, 205, 138, 0.16) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(218, 205, 138, 0.16) 1px, transparent 1px),
+    linear-gradient(rgba(218, 205, 138, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(218, 205, 138, 0.06) 1px, transparent 1px);
+  background-size: 40px 40px, 40px 40px, 10px 10px, 10px 10px;
+}
+
+/* Schematic grid paper */
+.schematic-grid {
+  background-color: #fbfaf6;
+  background-image:
+    radial-gradient(rgba(30, 41, 59, 0.12) 1px, transparent 1px);
+  background-size: 18px 18px;
+}
+
+.dark .schematic-grid {
+  background-color: #111820;
+  background-image:
+    radial-gradient(rgba(148, 163, 184, 0.14) 1px, transparent 1px);
+}
+
+/* Smooth current pulse animation in SVG paths */
+@keyframes currentFlow {
+  from {
+    stroke-dashoffset: 24;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes currentFlowReverse {
+  from {
+    stroke-dashoffset: 0;
+  }
+  to {
+    stroke-dashoffset: 24;
+  }
+}
+
+.flow-active {
+  stroke-dasharray: 6 6;
+  animation: currentFlow var(--flow-speed, 0.9s) linear infinite;
+}
+
+.flow-active-rev {
+  stroke-dasharray: 6 6;
+  animation: currentFlowReverse var(--flow-speed, 0.9s) linear infinite;
+}
+
+@keyframes fanSpin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.fan-spin {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: fanSpin var(--spin-speed, 0.8s) linear infinite;
+}
+
+@keyframes speakerPulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.07);
+  }
+}
+
+.speaker-pulse {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: speakerPulse 0.35s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flow-active,
+  .flow-active-rev,
+  .fan-spin,
+  .speaker-pulse {
+    animation: none !important;
+  }
+}
