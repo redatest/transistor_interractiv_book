@@ -14,8 +14,14 @@ export const CATALOG_CIRCUITS: CatalogCircuit[] = [
       fr: 'Démontre l’amplification en courant (~200×) : le faible courant traversant vos doigts suffit à illuminer une LED.',
       ar: 'يثبت تضخيم التيار (~200 مرة): التيار الضئيل عبر الأصابع يضيء الـ LED.',
     },
-    linkedChapterId: 1,
-    linkedExampleId: 'simplest',
+    analogyTitle: {
+      fr: 'La vanne proportionnelle : un filet de base ouvre le grand débit',
+      ar: 'صمّام المياه النسبي: قطرات القاعدة تفتح النهر الرئيسي',
+    },
+    analogyText: {
+      fr: 'Votre doigt laisse passer quelques microampères dans le tube latéral (Base). Cette faible poussée soulève le clapet du grand tuyau Collecteur–Émetteur et laisse passer 200 fois plus de courant vers la LED.',
+      ar: 'يمرّ عبر أصابعك بضعة ميكروأمبيرات فقط إلى ذراع القاعدة، لكنها ترفع الصمّام الكبير ليسمح بتدفق تيار أضخم بـ 200 مرة نحو المصباح.',
+    },
   },
   {
     id: 'second-simplest',
@@ -27,11 +33,17 @@ export const CATALOG_CIRCUITS: CatalogCircuit[] = [
     supply: '6V',
     parts: ['2×BC547', '100k', '220R', 'LED'],
     concept: {
-      fr: 'Un second BC547 remplace vos doigts et multiplie le gain à 200 × 200 = 40 000.',
+      fr: 'Un second BC547 amplifie le courant de l’émetteur du premier : le gain global atteint 200 × 200 = 40 000×.',
       ar: 'ترانزستور ثانٍ يضرب التضخيم ليصل إلى 40 000 مرة.',
     },
-    linkedChapterId: 4,
-    linkedExampleId: 'darlington-stages',
+    analogyTitle: {
+      fr: 'Deux vannes en cascade : le débit de Q1 pilote l’énorme vanne Q2',
+      ar: 'صمّامان متتاليان: خرج الصمّام الأول يفتح الصمّام الثاني',
+    },
+    analogyText: {
+      fr: 'Le petit filet d’eau sortant de l’émetteur E1 entre directement dans la commande B2 du deuxième étage. Même un contact quasi imperceptible sature la LED instantanément.',
+      ar: 'التيار الضعيف الخارج من باعث الترانزستور الأول يغذي قاعدة الترانزستور الثاني مباشرة، فتصبح الدارة حساسة للغاية بمعدل ×40,000.',
+    },
   },
   {
     id: 'eight-million-gain',
@@ -46,8 +58,14 @@ export const CATALOG_CIRCUITS: CatalogCircuit[] = [
       fr: 'Trois étages en cascade (200³ = 8 000 000) à très haute impédance capables de détecter une main ou l’électricité statique sans contact.',
       ar: 'ثلاث مراحل تضخيم تلتقط الكهرباء الساكنة واقتراب اليد عن بُعد.',
     },
-    linkedChapterId: 4,
-    linkedExampleId: 'mains-hum',
+    analogyTitle: {
+      fr: 'L’amplificateur hydraulique ×8 000 000 : du souffle à la cascade',
+      ar: 'مضاعفة هيدروليكية ×8,000,000: نسمة هواء تطلق شلالاً',
+    },
+    analogyText: {
+      fr: 'La moindre charge électrostatique dans l’air fait bouger la minuscule membrane de Q1 (nanoampères), qui commande Q2, qui commande Q3 : la LED réagit à plusieurs centimètres sans aucun contact physique.',
+      ar: 'أضعف شحنة ساكنة على مسافة سنتيمترات تحرّك الترانزستور الأول، فيضخّمها الثاني ثم الثالث حتى تضيء الـ LED بكامل قوتها.',
+    },
   },
   {
     id: 'mains-hum',
@@ -59,11 +77,17 @@ export const CATALOG_CIRCUITS: CatalogCircuit[] = [
     supply: '6V',
     parts: ['3×BC547', '1M', '100k', '220R', 'Piezo', 'LED'],
     concept: {
-      fr: 'Détecte le champ alternatif d’un câble secteur gainé à 2 cm de distance sans toucher le cuivre.',
-      ar: 'يكشف الكابلات الحاملة للتيار المنزلي على مسافة 2cm دون تلامس.',
+      fr: 'Détecte le champ alternatif 50/60 Hz d’un câble secteur encastré à quelques centimètres sans toucher le cuivre.',
+      ar: 'يكشف الكابلات الحاملة للتيار المنزلي 50Hz دون تلامس.',
     },
-    linkedChapterId: 4,
-    linkedExampleId: 'mains-hum',
+    analogyTitle: {
+      fr: 'L’antenne capte les vagues 50 Hz et fait vibrer la dernière vanne',
+      ar: 'الهوائي يلتقط تموّجات 50Hz ليهزّ الصمّام الأخير',
+    },
+    analogyText: {
+      fr: 'Le champ électromagnétique d’un fil mural agit comme de minuscules vibrations dans l’air captées par la plaque antenne. Les trois étages en cascade transforment cette onde 50 Hz en signal audible et lumineux.',
+      ar: 'المجال الكهربائي المتناوب يرسل نبضات ضئيلة يلتقطها الهوائي، وتضخّمها المراحل الثلاث المتعاقبة لتنبهك لوجود السلك في الجدار.',
+    },
   },
   {
     id: 'plant-watering',
@@ -78,8 +102,14 @@ export const CATALOG_CIRCUITS: CatalogCircuit[] = [
       fr: 'La résistance 220 kΩ limite le courant collecteur à ~2 mA pour protéger la LED tout en mesurant la conductivité de la terre.',
       ar: 'مقاومة 220k تحد التيار عند ~2mA لقياس رطوبة التربة بأمان.',
     },
-    linkedChapterId: 1,
-    linkedExampleId: 'plant',
+    analogyTitle: {
+      fr: 'La terre agit comme une éponge conductrice dans la commande de vanne',
+      ar: 'التربة كإسفنجة مبللة تتحكم في أنبوب القاعدة',
+    },
+    analogyText: {
+      fr: 'Plus la terre contient d’eau et de sels minéraux, plus le passage entre les deux sondes s’élargit : la base reçoit son micro-courant (limité par 220 kΩ) et allume le témoin d’humidité.',
+      ar: 'كلما زادت رطوبة التربة وأملاحها انخفضت مقاومتها، فيمرّ تيار صغير نحو القاعدة وتضيء الـ LED؛ وعند الجفاف ينغلق الصمّام.',
+    },
   },
   {
     id: 'simplest-tester',
@@ -91,11 +121,17 @@ export const CATALOG_CIRCUITS: CatalogCircuit[] = [
     supply: '9V',
     parts: ['9V', '1k', 'LED'],
     concept: {
-      fr: 'Identifie si un transistor inconnu est NPN ou PNP et repère B, C, E en testant les combinaisons avec le doigt.',
-      ar: 'يميز بين NPN و PNP ويحدد الأقطاب باللمس وقلب البطارية.',
+      fr: 'Identifie si un transistor inconnu est NPN ou PNP et vérifie son gain en inversant la polarité de la pile 9 V.',
+      ar: 'يميز بين NPN و PNP ويكشف الأعطال بعكس البطارية.',
     },
-    linkedChapterId: 2,
-    linkedExampleId: 'tester',
+    analogyTitle: {
+      fr: 'Clapet anti-retour unidirectionnel : NPN descend, PNP monte',
+      ar: 'صمّام باتجاه واحد: NPN يتدفق للأسفل وPNP للأعلى',
+    },
+    analogyText: {
+      fr: 'Un transistor se comporte comme un clapet monté dans un seul sens. Si vous branchez la pompe (pile 9 V) à l’envers, la pression plaque le clapet sur son siège et rien ne passe.',
+      ar: 'يعمل الترانزستور كصمّام عدم رجوع: لا يتدفق التيار إلا عندما يوافق اتجاه البطارية نوع الترانزستور (NPN أو PNP).',
+    },
   },
   {
     id: 'logic-probe',
@@ -107,11 +143,17 @@ export const CATALOG_CIRCUITS: CatalogCircuit[] = [
     supply: '3V',
     parts: ['BC547', 'BC557', '2×10k', '2×100R', 'LED Rouge', 'LED Verte'],
     concept: {
-      fr: 'Utilise la somme des seuils (≈ 5 V > 3 V) pour rester éteint à vide, puis allumer vert sur LOW et rouge sur HIGH.',
+      fr: 'Utilise la somme des seuils des deux LEDs + jonctions (≈ 5 V > 3 V) pour consommer 0 mA à vide, puis allumer vert sur LOW et rouge sur HIGH.',
       ar: 'يستهلك صفراً في السكون، ويضيء الأخضر عند LOW والأحمر عند HIGH.',
     },
-    linkedChapterId: 2,
-    linkedExampleId: 'logic-probe',
+    analogyTitle: {
+      fr: 'Deux clapets opposés équilibrés par un ressort central de 5 V',
+      ar: 'صمّامان متعاكسان متوازنان عند المنتصف',
+    },
+    analogyText: {
+      fr: 'Sous 3 V, la colonne centrale bloque les deux vannes tant que la pointe reste en l’air (0 mA !). Une pression haute (HIGH) ouvre le NPN rouge ; une aspiration basse (LOW) aspire la base du PNP vert.',
+      ar: 'في وضع الفراغ لا يكفي جهد 3V لفتح الفرعين معاً (استهلاك 0 mA)، أما إشارة HIGH فتفتح NPN الأحمر، وإشارة LOW تفتح PNP الأخضر.',
+    },
   },
   {
     id: 'courtesy-light',
@@ -123,11 +165,17 @@ export const CATALOG_CIRCUITS: CatalogCircuit[] = [
     supply: '12V',
     parts: ['BC557', 'BD679', '47u', '2×100k', '10k'],
     concept: {
-      fr: 'Maintient le plafonnier allumé plusieurs secondes après fermeture de porte pendant la charge d’un condensateur de 47 µF.',
-      ar: 'يبقي المصباح مضيئاً بضع ثوانٍ بعد إغلاق الباب ريثما يشحن مكثف 47µF.',
+      fr: 'Maintient le plafonnier 12 V allumé puis l’éteint en douceur après fermeture de la portière pendant la charge lente du condensateur 47 µF.',
+      ar: 'يبقي مصباح السقف 12V مضيئاً ثم يخبو تدريجياً ريثما يشحن مكثف 47µF.',
     },
-    linkedChapterId: 3,
-    linkedExampleId: 'courtesy-light',
+    analogyTitle: {
+      fr: 'Le réservoir élastique de 47 µF ralentit la fermeture du plafonnier',
+      ar: 'خزّان 47µF المرن يؤخّر إغلاق مصباح السيارة',
+    },
+    analogyText: {
+      fr: 'Portière ouverte, le réservoir est vide et la lampe brille à 100 %. Dès qu’on ferme la porte, l’eau remplit lentement le réservoir à travers 100 kΩ : tant qu’il se remplit, le BD679 reste conducteur.',
+      ar: 'عند فتح الباب يتفرغ المكثف ويضيء المصباح فوراً. عند الإغلاق يُشحن المكثف ببطء عبر مقاومة 100kΩ، ويبقى المصباح مضيئاً حتى يمتلئ.',
+    },
   },
   {
     id: 'touch-switch-globe',
@@ -139,11 +187,17 @@ export const CATALOG_CIRCUITS: CatalogCircuit[] = [
     supply: '6V',
     parts: ['3×BC547', 'BC557', '4M7', '470k', '10k', '4k7'],
     concept: {
-      fr: 'Une touche sur ON verrouille la lampe via la résistance de rétroaction 4,7 MΩ ; une touche sur OFF coupe l’auto-maintien.',
-      ar: 'لمسة ON تثبّت الإضاءة عبر مقاومة 4M7 ولمسة OFF تلغي التثبيت.',
+      fr: 'Une touche sur ON verrouille la lampe via la résistance de rétroaction 4,7 MΩ ; une touche sur OFF court-circuite la base à la masse.',
+      ar: 'لمسة ON تثبّت الإضاءة عبر 4M7 ولمسة OFF تفرّغ القاعدة.',
     },
-    linkedChapterId: 5,
-    linkedExampleId: 'touch-latch',
+    analogyTitle: {
+      fr: 'Le bras d’auto-maintien : la sortie réalimente sa propre commande',
+      ar: 'حلقة التثبيت الذاتي: الخرج يبقي نفسه مفتوحاً',
+    },
+    analogyText: {
+      fr: 'Une brève impulsion sur ON ouvre la chaîne de vannes ; un petit tuyau de retour (4,7 MΩ) renvoie alors un filet d’eau sur la première base pour qu’elle reste verrouillée même après retrait du doigt.',
+      ar: 'لمسة ON تفتح الترانزستورات، ثم ترجع مقاومة 4.7MΩ تياراً ضئيلاً إلى القاعدة الأولى ليبقى المصباح مضاءً بعد رفع إصبعك.',
+    },
   },
   {
     id: 'lie-detector-staircase',
@@ -155,11 +209,17 @@ export const CATALOG_CIRCUITS: CatalogCircuit[] = [
     supply: '9V',
     parts: ['4×BC547', '3×1N4148', '4×LED', '4×100R', '10k'],
     concept: {
-      fr: 'Circuit en escalier : chaque palier de 0,6 V supplémentaire allume une LED de plus à mesure que la résistance de peau chute.',
-      ar: 'دارة متدرجة: كل 0.6V إضافي يضيء LED جديداً مع انخفاض مقاومة الجلد.',
+      fr: 'Circuit en escalier à diodes : chaque palier de +0,6 V (0,6 V, 1,2 V, 1,8 V, 2,4 V) débloque une LED supplémentaire selon la conductance de la peau.',
+      ar: 'دارة الدرج: كل عتبة إضافية بمقدار 0.6V تضيء مصباحاً جديداً.',
     },
-    linkedChapterId: 1,
-    linkedExampleId: 'staircase',
+    analogyTitle: {
+      fr: 'Quatre barrages en escalier de hauteurs croissantes (0,6 V à 2,4 V)',
+      ar: 'أربعة حواجز متدرجة الارتفاع (من 0.6V إلى 2.4V)',
+    },
+    analogyText: {
+      fr: 'Les diodes en série sur les bases élèvent chaque seuil d’un cran (+0,6 V). Plus vous serrez les électrodes (ou si la peau est humide), plus le niveau monte et submerge les paliers 1, 2, 3 puis 4.',
+      ar: 'تضيف كل وصلة عتبة 0.6V إضافية. كلما اشتد الضغط أو زادت رطوبة الجلد، ارتفع الجهد ليغمر المصابيح الأربعة بالتدريج.',
+    },
   },
   {
     id: 'night-light',
@@ -171,11 +231,17 @@ export const CATALOG_CIRCUITS: CatalogCircuit[] = [
     supply: '6V – 12V',
     parts: ['LDR ORP12', 'BC557', 'BC547', '1M', '10k', 'Relais'],
     concept: {
-      fr: 'Détecte la baisse de luminosité ambiante via la photorésistance ORP12 pour activer automatiquement l’éclairage.',
-      ar: 'يستشعر هبوط الإضاءة عبر ORP12 لتشغيل الإنارة تلقائياً.',
+      fr: 'La photorésistance ORP12 bascule un étage amplificateur qui colle un relais dès que la lumière passe sous le seuil crépusculaire.',
+      ar: 'المقاومة الضوئية ORP12 تشغّل المرحّل تلقائياً عند حلول الظلام.',
     },
-    linkedChapterId: 5,
-    linkedExampleId: 'dark-schmitt',
+    analogyTitle: {
+      fr: 'Le volet solaire bloque la vanne le jour et la libère la nuit',
+      ar: 'المصراع الضوئي يغلق الصمّام نهاراً ويفتحه ليلاً',
+    },
+    analogyText: {
+      fr: 'En plein jour, la LDR dérive le courant vers la masse et maintient la base trop basse. Au crépuscule, sa résistance grimpe à des mégohms : la tension monte sur la base et colle le relais de la veilleuse.',
+      ar: 'في النهار تكون مقاومة LDR منخفضة فتسرّب الإشارة بعيداً عن القاعدة؛ وفي الليل ترتفع مقاومتها جداً فتتجه الطاقة لفتح الترانزستور وتشغيل المصباح.',
+    },
   },
   {
     id: 'schmitt-trigger',
@@ -187,11 +253,17 @@ export const CATALOG_CIRCUITS: CatalogCircuit[] = [
     supply: '6V',
     parts: ['3×BC547', 'LDR ORP12', '22k', '4k7', '330R', 'LED'],
     concept: {
-      fr: 'Basculement franc entre ON et OFF grâce à deux seuils distincts (Hysteresis Gap), évitant tout scintillement.',
-      ar: 'انقلاب سريع وحاسم بين التشغيل والإطفاء بفضل فجوة الهسترة.',
+      fr: 'Deux seuils distincts (ON à ≤ 30 %, OFF à ≥ 55 %) grâce à l’émetteur commun couplé, éliminant tout battement à la tombée du jour.',
+      ar: 'عتبتان مختلفتان للتشغيل والإطفاء لمنع ارتعاش الإضاءة عند الغروب.',
     },
-    linkedChapterId: 5,
-    linkedExampleId: 'dark-schmitt',
+    analogyTitle: {
+      fr: 'Le ressort à déclic : deux points de bascule pour éviter le tremblement',
+      ar: 'المفتاح ذو العتبتين: يمنع التذبذب عند منطقة الشفق',
+    },
+    analogyText: {
+      fr: 'Une fois que la nuit tombe sous 30 %, le basculement verrouille la lampe. Pour l’éteindre le matin, la lumière doit remonter jusqu’à 55 % : entre les deux, le circuit garde sa mémoire.',
+      ar: 'ينقلب المصباح للعمل تحت 30% ولا ينطفئ إلا إذا تجاوز الضوء 55%؛ هذه الفجوة (الهسترة) تضمن ثبات الحالة بلا وميض.',
+    },
   },
   {
     id: 'sound-triggered-led',
@@ -203,11 +275,17 @@ export const CATALOG_CIRCUITS: CatalogCircuit[] = [
     supply: '6V',
     parts: ['Micro Électret', '2×BC547', '1N4148', '10u', '100n', '470R'],
     concept: {
-      fr: 'La pompe de charge (100n + 1N4148 + 10u) redresse les impulsions du micro pour allumer la LED à chaque claquement.',
-      ar: 'مضخة الشحنة تحول نبضة الميكروفون إلى إضاءة مؤقتة للـ LED.',
+      fr: 'Le préampli micro charge rapidement le 10 µF à travers la diode 1N4148 lors d’un claquement, maintenant la LED allumée quelques secondes.',
+      ar: 'تضخّم الإشارة الصوتية وتشحن مكثف 10µF عبر الدايود لإضاءة مؤقتة.',
     },
-    linkedChapterId: 5,
-    linkedExampleId: 'clap-sound',
+    analogyTitle: {
+      fr: 'La pompe à clapet anti-retour : un bruit bref remplit le réservoir tampon',
+      ar: 'مضخة الصوت: التصفيق السريع يملأ الخزّان المؤقت',
+    },
+    analogyText: {
+      fr: 'Un claquement de mains ne dure que quelques millisecondes, mais la diode 1N4148 empêche l’eau de refluer hors du condensateur 10 µF, prolongeant l’allumage de la LED.',
+      ar: 'التصفيق نبضة سريعة جداً، لكن الدايود 1N4148 يحجز الشحنة داخل مكثف 10µF فلا تتسرب للخلف وتبقى الـ LED مضيئة لثوانٍ.',
+    },
   },
   {
     id: 'robot-man',
@@ -219,11 +297,17 @@ export const CATALOG_CIRCUITS: CatalogCircuit[] = [
     supply: '9V',
     parts: ['2×BC547', '2×100u', '2×10k', '2×470R', '2×LED'],
     concept: {
-      fr: 'Multivibrateur astable classique faisant alterner deux LEDs en boucle infinie grâce aux deux condensateurs croisés.',
-      ar: 'مذبذب متناوب يجعل المصباحين يتبادلان الوميض باستمرار.',
+      fr: 'Multivibrateur astable à deux transistors croisés par C1 et C2 : quand Q1 sature, C1 bloque Q2 jusqu’à sa décharge, puis les rôles s’inversent.',
+      ar: 'مذبذب متناوب بمكثفين متقاطعين يجعل العينين تتبادلان الوميض.',
     },
-    linkedChapterId: 6,
-    linkedExampleId: 'flipflop-2led',
+    analogyTitle: {
+      fr: 'La balançoire à deux réservoirs croisés : un seul côté verse à la fois',
+      ar: 'الأرجوحة المتناوبة: يتبادل الترانزستوران الفتح والإغلاق',
+    },
+    analogyText: {
+      fr: 'Dès qu’un transistor devient passant, son collecteur chute à 0,2 V et pousse une impulsion négative via le condensateur vers la base opposée, forçant l’autre LED à s’éteindre le temps du cycle RC.',
+      ar: 'عندما يعمل Q1 يهبط جهد مجمّعه فجأة فينقل المكثف نبضة تغلق Q2، وبعد امتلاء المكثف ينقلب الوضع تلقائياً في حلقة مستمرة.',
+    },
   },
   {
     id: 'three-led-chaser',
@@ -235,11 +319,17 @@ export const CATALOG_CIRCUITS: CatalogCircuit[] = [
     supply: '6V',
     parts: ['3×BC547', '4×22u', '3×39k', '3×1k', '3×LED'],
     concept: {
-      fr: 'Trois transistors en anneau impair où l’extinction se propage en cercle d’une LED à la suivante.',
-      ar: 'حلقة فردية من ٣ ترانزستورات تدور فيها حالة الـ LEDs بالتتابع.',
+      fr: 'Anneau impair à 3 étages : une onde de blocage/conduction tourne en boucle continue entre Q1, Q2 et Q3.',
+      ar: 'حلقة فردية من ٣ مراحل تدور فيها حالة التوصيل دون توقف.',
     },
-    linkedChapterId: 6,
-    linkedExampleId: 'chaser-3led',
+    analogyTitle: {
+      fr: 'Trois écluses en manège circulaire reliées par 3 condensateurs',
+      ar: 'ثلاث بوابات في دائرة مغلقة تنقل النبضة بالتتابع',
+    },
+    analogyText: {
+      fr: 'Chaque étage passe le témoin à son voisin via un condensateur 22 µF. Comme la boucle comporte un nombre impair d’inverseurs (3), aucun état fixe n’existe : la lumière tourne indéfiniment.',
+      ar: 'ينقل كل ترانزستور التبديل إلى جاره عبر مكثف الربط؛ وبما أن عدد المراحل فردي (٣)، يستحيل الاستقرار وتستمر الحركة الدائرية.',
+    },
   },
   {
     id: 'ticking-bomb',
@@ -251,11 +341,17 @@ export const CATALOG_CIRCUITS: CatalogCircuit[] = [
     supply: '9V',
     parts: ['BC547', 'BC557', '2u2', '100u', '200k pot', 'HP 8Ω'],
     concept: {
-      fr: 'Boucle à réaction positive entre NPN et PNP produisant des impulsions sèches ou une sirène modulée.',
-      ar: 'تغذية راجعة بين NPN و PNP تولد نقرات إيقاعية أو نغمة متصاعدة.',
+      fr: 'Paire complémentaire NPN + PNP à rétroaction directe sur haut-parleur 8 Ω : passe d’un battement sec (Tic-Tac) à une tonalité continue selon R.',
+      ar: 'تغذية راجعة بين NPN و PNP تولّد نقرات أو نغمة متواصلة في السماعة.',
     },
-    linkedChapterId: 6,
-    linkedExampleId: 'siren-tick',
+    analogyTitle: {
+      fr: 'Le bélier acoustique NPN + PNP : les deux vannes s’ouvrent en cascade brutale',
+      ar: 'مطرقة الصوت التكاملية: يفتح الصمّامان معاً في نبضة خاطفة',
+    },
+    analogyText: {
+      fr: 'Dès que Q1 (NPN) amorce, il tire la base de Q2 (PNP), qui renvoie aussitôt une poussée positive vers Q1 par C_fb : les deux saturent violemment dans le haut-parleur puis coupent jusqu’à la recharge.',
+      ar: 'ما إن يبدأ NPN بالتوصيل حتى يفتح PNP بقوة، فيرجع تيار التسريع عبر مكثف التغذية الراجعة محدثاً نقرة عالية في سماعة 8Ω.',
+    },
   },
   {
     id: 'led-on-1v5',
@@ -267,11 +363,17 @@ export const CATALOG_CIRCUITS: CatalogCircuit[] = [
     supply: '1.5V',
     parts: ['3×BC547', '1u', '2×10n', '100R', 'LED Rouge'],
     concept: {
-      fr: 'Charge un condensateur de 1 µF puis l’inverse en série avec la pile pour obtenir 2,5 V > seuil 1,7 V de la LED.',
-      ar: 'يشحن مكثف 1µF ثم يضيف جهده إلى جهد البطارية ليصل إلى 2.5V.',
+      fr: 'Astuce sans bobine : charge 1 µF à ~1 V (Phase A) puis le bascule en série avec la pile 1,5 V (Phase B) pour atteindre 2,5 V > seuil 1,7 V.',
+      ar: 'يرفع الجهد دون ملف: يشحن مكثفاً ثم يجمعه على التوالي مع البطارية ليصل إلى 2.5V.',
     },
-    linkedChapterId: 7,
-    linkedExampleId: 'charge-pump',
+    analogyTitle: {
+      fr: 'L’ascenseur à seaux d’eau : deux marches de 1,5 V mises bout à bout',
+      ar: 'مضخة الدلوين: تكديس خزانين للوصول فوق عتبة 1.7V',
+    },
+    analogyText: {
+      fr: 'Une pile de 1,5 V seule reste sous le mur de 1,7 V d’une LED rouge. En chargeant un condensateur 1 µF puis en soulevant sa borne négative jusqu’au +1,5 V, la sortie saute à ~2,5 V.',
+      ar: 'بطارية 1.5V وحدها عاجزة عن تخطي حاجز 1.7V للـ LED. بشحن المكثف ثم وضعه فوق جهد البطارية نقفز إلى 2.5V وتضيء الـ LED!',
+    },
   },
   {
     id: 'bike-flasher-air',
@@ -283,11 +385,17 @@ export const CATALOG_CIRCUITS: CatalogCircuit[] = [
     supply: '1.5V',
     parts: ['BC547', 'Bobine 30t+30t air', '10u', '100k', '2×LED Blanche'],
     concept: {
-      fr: 'Prouve que l’effondrement rapide du flux magnétique (même dans l’air !) crée une surtension > 6 V depuis une seule pile.',
-      ar: 'يثبت أن انهيار المجال المغناطيسي يولد جهداً عالياً يضيء مصباحين أبيضين من 1.5V.',
+      fr: 'Une simple bobine à air (30+30 spires) génère des trains d’impulsions > 6,4 V depuis une seule pile 1,5 V pour flasher 2 LEDs blanches en série.',
+      ar: 'ملف هوائي بدون فيريت يولّد نبضات >6.4V لتشغيل مصباحين أبيضين من 1.5V.',
     },
-    linkedChapterId: 7,
-    linkedExampleId: 'joule-thief',
+    analogyTitle: {
+      fr: 'Le coup de bélier magnétique : couper net le courant catapulte l’eau à 6,4 V',
+      ar: 'المطرقة المائية للملف: القطع المفاجئ يرفع الضغط فوق 6.4V',
+    },
+    analogyText: {
+      fr: 'Lorsque le BC547 se ferme brutalement, l’énergie stockée dans l’inductance à air refuse de s’arrêter : la tension grimpe à plus de 6,4 V jusqu’à ce qu’elle perce les deux LEDs blanches (ou menace Q1 si la LED est débranchée !).',
+      ar: 'عند إغلاق الترانزستور فجأة ينهار المجال المغناطيسي في الملف الهوائي، فيقفز الجهد فوق 6.4V ليتجاوز عتبة مصباحين أبيضين على التوالي.',
+    },
   },
   {
     id: 'led-torch-1v5',
@@ -299,11 +407,17 @@ export const CATALOG_CIRCUITS: CatalogCircuit[] = [
     supply: '1.5V',
     parts: ['BC337', 'Ferrite F29 60t+40t', '2k7', '10n', 'LED 20000mcd'],
     concept: {
-      fr: 'Oscille entre 100 kHz et 500 kHz pour pulser la LED à haute luminosité avec seulement 28 mA moyens.',
-      ar: 'يتذبذب بتردد عالٍ لنبض الـ LED بسطوع كامل من خلية واحدة.',
+      fr: 'Tore ferrite F29 oscillant à 100–500 kHz : exploite même une pile usée jusqu’à 0,85 V en pulsant la LED blanche à 3,5 V.',
+      ar: 'قلب فيريت F29 يتذبذب بتردد عالٍ ويستنزف آخر قطرة من البطارية حتى 0.85V.',
     },
-    linkedChapterId: 7,
-    linkedExampleId: 'joule-thief',
+    analogyTitle: {
+      fr: 'Le bélier haute fréquence à tore ferrite F29 : vide la pile jusqu’à 0,85 V',
+      ar: 'مطرقة الفيريت عالية التردد: تتخطى سدّ 3.2V حتى من بطارية شبه فارغة',
+    },
+    analogyText: {
+      fr: 'À chaque cycle de quelques microsecondes, la ferrite F29 stocke puis projette l’énergie par-dessus la digue de 3,2 V de la LED blanche. Notre œil perçoit l’intensité de crête pour seulement ~28 mA moyens.',
+      ar: 'يخزّن قلب الفيريت الطاقة ثم يضخّها كنبضات تتجاوز حاجز 3.2V للـ LED الأبيض، فتبدو الإضاءة قوية جداً بتيار متوسط قليل.',
+    },
   },
   {
     id: 'solar-charger',
@@ -315,11 +429,17 @@ export const CATALOG_CIRCUITS: CatalogCircuit[] = [
     supply: 'Panneau 18V / Batt 12V',
     parts: ['BC547', 'Relais 12V', 'Pot 1k', '100R 5W', '270R', '22u'],
     concept: {
-      fr: 'Coupe la charge à 13,7 V vers une charge factice de 3,24 W et ne la réactive qu’à 12,5 V pour protéger la batterie.',
-      ar: 'يفصل الشحن عند 13.7V نحو حِمل وهمي ويعيده عند 12.5V.',
+      fr: 'Hystérésis de charge : coupe à 13,7 V vers une charge factice 100 Ω 5 W (3,24 W) et ne reprend qu’à ≤ 12,5 V pour protéger batterie et relais.',
+      ar: 'يفصل الشحن عند 13.7V نحو حِمل 100Ω ويعيده فقط تحت 12.5V.',
     },
-    linkedChapterId: 8,
-    linkedExampleId: 'solar-charger',
+    analogyTitle: {
+      fr: 'Le déversoir à deux seuils (13,7 V coupure · 12,5 V reprise)',
+      ar: 'بوابة التصريف ذات العتبتين (فصل 13.7V وعودة 12.5V)',
+    },
+    analogyText: {
+      fr: 'Les 28 cellules (18 V) remplissent la batterie jusqu’à 13,7 V. À ce niveau, Q1 colle le relais K1 qui dévie l’excédent dans le radiateur 100 Ω (3,24 W) et attend 12,5 V avant de reconnecter.',
+      ar: 'يشحن اللوح الشمسي (18V) البطارية حتى 13.7V، عندها يفعّل Q1 المرحّل لتحويل الطاقة الفائضة إلى مقاومة 100Ω ولا يعود للشحن إلا عند 12.5V.',
+    },
   },
   {
     id: 'constant-current-source',
@@ -329,13 +449,19 @@ export const CATALOG_CIRCUITS: CatalogCircuit[] = [
     category: 'power',
     transistors: ['BC547', 'BD679 / BC338'],
     supply: '6V – 15V',
-    parts: ['BC547', 'BD679', '10k', 'R_sense (22R–560R)', 'LEDs'],
+    parts: ['BC547', 'BD679', '10k', 'R_sense (22R–120R)', 'LEDs'],
     concept: {
-      fr: 'Le BC547 mesure I × R_sense et régule la base du transistor de puissance pour verrouiller I_LED exactement à 0,6 V / R_sense.',
-      ar: 'يقيس BC547 الجهد على R2 ليثبّت التيار تماماً مهما ارتفع جهد المصدر.',
+      fr: 'Q1 mesure I × R_sense : dès que la tension atteint 0,62 V, Q1 pince la base de Q2 et verrouille I_LED = 0,62 V / R_sense de 6 V à 15 V.',
+      ar: 'يثبت التيار عند 0.62V / R_sense مهما تغيّر جهد المصدر أو عدد المصابيح.',
     },
-    linkedChapterId: 8,
-    linkedExampleId: 'constant-current',
+    analogyTitle: {
+      fr: 'La soupape autorégulatrice : plus la pression monte, plus Q1 pince Q2',
+      ar: 'صمّام الخنق الذاتي: كلما ارتفع الجهد زاد كبح Q1 لـ Q2',
+    },
+    analogyText: {
+      fr: 'Peu importe que le château d’eau soit à 6 V ou 15 V ou que vous mettiez 1, 2 ou 3 LEDs en série (tant qu’il reste assez de tension de réserve) : Q1 maintient le débit exactement constant.',
+      ar: 'سواء كان الجهد 6V أو 15V وسواء وصلتَ مصباحاً أو ثلاثة، يقيس Q1 الجهد على مقاومة الاستشعار ويخنق Q2 ليبقى التيار ثابتاً تماماً.',
+    },
   },
   {
     id: 'motor-speed-control',
@@ -347,11 +473,17 @@ export const CATALOG_CIRCUITS: CatalogCircuit[] = [
     supply: '3V',
     parts: ['BC557', 'BC338', '100u', '47R', '22k', 'Moteur 3V'],
     concept: {
-      fr: 'Envoie des impulsions de couple élevé plutôt que de chuter la tension dans une résistance : le moteur démarre même à bas régime.',
-      ar: 'يغذّي المحرك بنبضات تحافظ على عزمه حتى عند السرعات المنخفضة.',
+      fr: 'Module la vitesse par impulsions 3 V à plein couple au lieu de perdre de la tension dans une résistance : évite le blocage au démarrage.',
+      ar: 'يتحكم في السرعة بنبضات كاملة العزم (PWM) فلا يتوقف المحرك عند البطء.',
     },
-    linkedChapterId: 5,
-    linkedExampleId: 'motor-relay',
+    analogyTitle: {
+      fr: 'Pousser une roue par à-coups francs plutôt que par un filet mou',
+      ar: 'دفع التوربين بدفعات قوية متقطعة بدلاً من تيار ضعيف عاجز',
+    },
+    analogyText: {
+      fr: 'Réduire la tension avec une résistance empêche le moteur de vaincre les frottements. Le PWM envoie des coups de poing à plein 3 V dont seule la durée (10–100 %) varie : couple maximal préservé !',
+      ar: 'خفض الجهد بمقاومة عادية يُعجز المحرك عن الدوران تحت الحمل، أما نبضات PWM فتعطيه 3V كاملة في كل نبضة وتغيّر فقط نسبة وقت التشغيل.',
+    },
   },
   {
     id: 'self-bias-ce',
@@ -363,11 +495,17 @@ export const CATALOG_CIRCUITS: CatalogCircuit[] = [
     supply: '5V',
     parts: ['BC547', 'R_L 22k', 'R_B 2M2'],
     concept: {
-      fr: 'Centre la tension collecteur V_C à V_CC / 2 = 2,5 V pour autoriser une amplification AC symétrique sans écrêtage.',
-      ar: 'يضبط جهد المجمّع عند منتصف التغذية 2.5V لتكبير الإشارة دون قصّ.',
+      fr: 'Ajuste R_B ≈ 2,2 MΩ pour centrer le collecteur à V_C = V_CC / 2 = 2,50 V et amplifier un signal AC sans écrêtage haut ni bas.',
+      ar: 'يضبط R_B عند 2.2MΩ لتثبيت V_C في منتصف التغذية 2.50V ومنع قصّ الموجة.',
     },
-    linkedChapterId: 9,
-    linkedExampleId: 'half-rail-challenge',
+    analogyTitle: {
+      fr: 'Le pendule centré à mi-hauteur (2,5 V) entre le sol 0 V et le plafond 5 V',
+      ar: 'تثبيت نقطة الراحة في المنتصف (2.5V) لحرية التأرجح',
+    },
+    analogyText: {
+      fr: 'Si le point de repos Q est trop proche du plafond (5 V) ou du plancher (0 V), l’onde sinusoïdale AC s’écrase contre la butée dès que l’amplitude augmente. Centrer à 2,50 V donne l’excursion maximale.',
+      ar: 'إذا اقترب جهد المجمّع من 0V أو 5V تصطدم قمم الموجة بالسقف أو القاع وتتقصّف. ضبطه عند 2.50V يمنح أوسع مدى للتكبير النظيف.',
+    },
   },
   {
     id: 'multimeter-tester',
@@ -379,10 +517,16 @@ export const CATALOG_CIRCUITS: CatalogCircuit[] = [
     supply: 'Pile interne ohmètre',
     parts: ['Multimètre analogique x10 / x10k', 'Doigt'],
     concept: {
-      fr: 'Méthode en 2 étapes du livre : calibre x10 pour trouver Base et NPN/PNP, puis x10k + pression du doigt pour distinguer C et E.',
-      ar: 'طريقة الخطوتين في الكتاب: x10 لاكتشاف القاعدة والنوع، ثم x10k والضغط بالإصبع لتمييز C و E.',
+      fr: 'Méthode complète en 2 étapes : calibre ×10 pour repérer la Base B et le type NPN/PNP, puis calibre ×10k + doigt sur C–B pour identifier Collecteur et Émetteur.',
+      ar: 'طريقة الخطوتين: x10 لاكتشاف القاعدة والنوع، ثم x10k والضغط بالإصبع لتمييز C و E.',
     },
-    linkedChapterId: 2,
-    linkedExampleId: 'tester',
+    analogyTitle: {
+      fr: 'Deux clapets dos à dos + commande secrète par fuite du doigt en ×10k',
+      ar: 'صمّامان متقابلان + مضخّم الإصبع على تدريج x10k',
+    },
+    analogyText: {
+      fr: 'Attention : sur un multimètre analogique en ohmmètre, le fil NOIR est le (+) de la pile interne ! En ×10, seule la broche Base conduit vers les deux autres (deux diodes). En ×10k, votre doigt entre C et B déclenche le gain β uniquement lorsque la polarité entre C et E est la bonne !',
+      ar: 'تذكّر: في الأفوميتر التناظري السلك الأسود هو (+) البطارية الداخلية! على x10 تكشف القاعدة التي توصل للطرفين، وعلى x10k يفتح إصبعك المسار الحقيقي فقط إذا كان المجمّع والباعث في الاتجاه الصحيح.',
+    },
   },
 ];

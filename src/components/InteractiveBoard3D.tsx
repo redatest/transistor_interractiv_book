@@ -7,6 +7,7 @@ interface Props {
   params: SimParams;
   sim: SimReadout;
   lang: Lang;
+  wide?: boolean;
   onQuickAction?: (action: string) => void;
 }
 
@@ -76,6 +77,26 @@ const PART_INFO: Record<string, InspectedPart> = {
     name: 'Résistance de maintien 4,7 MΩ',
     roleFr: 'Boucle de rétroaction positive : maintient le potentiel de la base B au-dessus de 0,6 V après le retrait du doigt.',
     roleAr: 'مقاومة التغذية الراجعة 4M7: تحافظ على جهد القاعدة B فوق 0.6V بعد رفع الإصبع عن لوح ON.',
+  },
+  STATIC: {
+    name: 'Plaque / Antenne électrostatique (×8 000 000)',
+    roleFr: 'Capte des nano-ampères induits sans contact grâce à la cascade de 3 transistors (Q1→Q2→Q3).',
+    roleAr: 'لوح استشعار الشحنة الساكنة: يلتقط تيارات متناهية الصغر دون لمس بفضل تضخيم المراحل الثلاث.',
+  },
+  PWM: {
+    name: 'Oscillateur PWM (BC557 + BC338)',
+    roleFr: 'Envoie des impulsions 3 V à plein courant mais à largeur variable : le moteur garde tout son couple même à faible vitesse.',
+    roleAr: 'مذبذب نبضات PWM: يغذّي المحرك بنبضات سريعة كاملة الجهد (3V) ليحافظ على عزمه في السرعات البطيئة.',
+  },
+  METER: {
+    name: 'Multimètre Analogique (Ohmmètre ×10 / ×10k)',
+    roleFr: 'En position ohmmètre analogique, le cordon NOIR porte le (+) de la pile interne et le cordon ROUGE le (−).',
+    roleAr: 'في وضع الأوميتر التناظري يحمل السلك الأسود القطب الموجب (+) للبطارية الداخلية والسلك الأحمر القطب السالب (−).',
+  },
+  DOME: {
+    name: 'Plafonnier 12 V + BD679 Darlington',
+    roleFr: 'Alimenté en 12 V automobile : la charge du 47 µF ralentit progressivement le courant de base jusqu’à l’extinction douce.',
+    roleAr: 'مصباح سيارة 12V: شحن المكثف 47µF يخفض تيار القاعدة تدريجياً حتى ينطفئ المصباح بنعومة.',
   },
 };
 
@@ -200,9 +221,9 @@ const TransistorTO92: React.FC<TransistorProps> = ({
   );
 };
 
-export const InteractiveBoard3D: React.FC<Props> = ({ params, sim, lang, onQuickAction }) => {
-  const [rot, setRot] = useState({ rx: 28, rz: -6 });
-  const [inspected, setInspected] = useState<string>('Q1');
+export const InteractiveBoard3D: React.FC<Props> = ({ params, sim, lang, wide = false, onQuickAction }) => {
+  const [rot, setRot] = useState({ rx: wide ? 22 : 28, rz: wide ? -4 : -6 });
+  const [inspected, setInspected] = useState<string>(params.catalogId === 'multimeter-tester' ? 'METER' : 'Q1');
   const dragRef = useRef<{ active: boolean; x: number; y: number }>({ active: false, x: 0, y: 0 });
 
   const flowSpeed = sim.conducting
@@ -231,9 +252,26 @@ export const InteractiveBoard3D: React.FC<Props> = ({ params, sim, lang, onQuick
     dragRef.current.active = false;
   };
 
+  const cid = params.catalogId;
   const part = PART_INFO[inspected] || PART_INFO.Q1;
-  const isNpn = params.chapterId === 2 ? params.transistorType === 'NPN' : true;
+  const isNpn =
+    cid === 'simplest-tester' || (!cid && params.chapterId === 2)
+      ? params.transistorType === 'NPN'
+      : true;
   const ledGlow = sim.conducting ? Math.max(0.25, sim.brightness) : 0;
+
+  const isDarlingtonScene =
+    cid === 'second-simplest' ||
+    cid === 'eight-million-gain' ||
+    cid === 'mains-hum' ||
+    (!cid && params.chapterId === 4);
+  const isChaserScene = cid === 'three-led-chaser' || (!cid && params.chapterId === 6 && params.exampleId === 'chaser-3led');
+  const isFlipFlopScene = cid === 'robot-man' || (!cid && params.chapterId === 6 && params.exampleId === 'flipflop-2led');
+  const isSirenScene = cid === 'ticking-bomb' || (!cid && params.chapterId === 6 && params.exampleId === 'siren-tick');
+  const isSolarScene = cid === 'solar-charger' || (!cid && params.chapterId === 8 && params.exampleId === 'solar-charger');
+  const isConstantCurrentScene =
+    cid === 'constant-current-source' || (!cid && params.chapterId === 8 && params.exampleId === 'constant-current');
+  const isMultimeterScene = cid === 'multimeter-tester';
 
   return (
     <div className="flex flex-col gap-3">
@@ -243,21 +281,31 @@ export const InteractiveBoard3D: React.FC<Props> = ({ params, sim, lang, onQuick
         onPointerMove={handlePointerMove}
         onPointerUp={handlePointerUp}
         onPointerCancel={handlePointerUp}
-        className="workbench-mat relative h-[350px] sm:h-[395px] w-full rounded-xl overflow-hidden border border-stone-700/40 select-none cursor-grab active:cursor-grabbing flex items-center justify-center"
-        style={{ perspective: '950px', touchAction: 'pan-y' }}
+        className={`workbench-mat relative ${
+          wide ? 'h-[430px] sm:h-[530px]' : 'h-[350px] sm:h-[395px]'
+        } w-full rounded-xl overflow-hidden border border-stone-700/40 select-none cursor-grab active:cursor-grabbing flex items-center justify-center`}
+        style={{ perspective: wide ? '1250px' : '950px', touchAction: 'pan-y' }}
       >
         {/* Top HUD inside Mat */}
         <div className="absolute top-3 left-3 right-3 z-20 flex items-center justify-between pointer-events-none" dir="ltr">
-          <div className="bg-black/60 backdrop-blur-xs text-stone-100 text-xs px-2.5 py-1 rounded-md font-mono-num flex items-center gap-2 pointer-events-auto">
+          <div className="bg-black/65 backdrop-blur-xs text-stone-100 text-xs px-2.5 py-1 rounded-md font-mono-num flex items-center gap-2 pointer-events-auto">
             <span className="text-sky-400">V_BE {sim.vbe.toFixed(2)}V</span>
             <span className="text-stone-500">·</span>
             <span className="text-rose-400">V_CE {sim.vce.toFixed(2)}V</span>
             <span className="text-stone-500">·</span>
             <span className="text-emerald-400">I_C {sim.icMA.toFixed(1)}mA</span>
+            {sim.freqHz && sim.freqHz > 0 && (
+              <>
+                <span className="text-stone-500">·</span>
+                <span className="text-amber-300">
+                  {sim.freqHz >= 1000 ? `${(sim.freqHz / 1000).toFixed(0)}kHz` : `${sim.freqHz.toFixed(1)}Hz`}
+                </span>
+              </>
+            )}
           </div>
           <button
             type="button"
-            onClick={() => setRot({ rx: 28, rz: -6 })}
+            onClick={() => setRot({ rx: wide ? 22 : 28, rz: wide ? -4 : -6 })}
             className="pointer-events-auto bg-black/60 hover:bg-black/80 text-stone-100 text-xs px-2.5 py-1 rounded-md flex items-center gap-1.5 transition-colors cursor-pointer whitespace-nowrap"
             title={lang === 'fr' ? 'Réinitialiser l’angle' : 'إعادة ضبط الزاوية'}
           >
@@ -268,7 +316,9 @@ export const InteractiveBoard3D: React.FC<Props> = ({ params, sim, lang, onQuick
 
         {/* Tilted 3D PCB SVG */}
         <div
-          className="transition-transform duration-150 ease-out w-[94%] max-w-[540px]"
+          className={`transition-transform duration-150 ease-out ${
+            wide ? 'w-[96%] max-w-[860px]' : 'w-[94%] max-w-[540px]'
+          }`}
           style={{
             transform: `rotateX(${rot.rx}deg) rotateZ(${rot.rz}deg)`,
             transformStyle: 'preserve-3d',
@@ -345,10 +395,125 @@ export const InteractiveBoard3D: React.FC<Props> = ({ params, sim, lang, onQuick
               LIVRE VIVANT · PCB 3D
             </text>
 
-            {/* ================= CHAPTER 4: DARLINGTON 1/2/3 STAGES & MAINS HUM 50Hz ================= */}
-            {params.chapterId === 4 ? (
+            {/* ================= CATALOG #24: ANALOG MULTIMETER TESTER ON 3D BENCH ================= */}
+            {isMultimeterScene ? (
               (() => {
-                const activeStages = params.exampleId === 'mains-hum' ? 3 : params.stages;
+                const defl = sim.meterDeflection ?? 0.02;
+                const needleDeg = -46 + defl * 92;
+                const bPin = params.blackPin ?? 2;
+                const rPin = params.redPin ?? 1;
+                const range = params.meterRange ?? 'x10';
+                const pinXs: Record<1 | 2 | 3, number> = { 1: 344, 2: 370, 3: 396 };
+                const bX = pinXs[bPin];
+                const rX = pinXs[rPin];
+                const mystery = params.mysteryType ?? 'npn_ebc';
+                const rev = Boolean(params.revealPins);
+                const labels: Record<1 | 2 | 3, string> =
+                  mystery === 'pnp_bce' ? { 1: 'B', 2: 'C', 3: 'E' } : { 1: 'E', 2: 'B', 3: 'C' };
+
+                return (
+                  <g>
+                    {/* Analog Ohmmeter Case on Left of PCB */}
+                    <g data-comp="METER" onClick={() => setInspected('METER')} className="cursor-pointer">
+                      <rect x="44" y="34" width="190" height="236" rx="12" fill="#1e293b" stroke="#64748b" strokeWidth="2.5" />
+                      <rect x="58" y="48" width="162" height="94" rx="7" fill="#fefce8" stroke="#ca8a04" strokeWidth="1.5" />
+                      <path d="M 74 122 A 68 68 0 0 1 204 122" fill="none" stroke="#1c1917" strokeWidth="2.2" />
+                      <text x="68" y="106" fill="#dc2626" fontSize="12" fontWeight="700">∞</text>
+                      <text x="139" y="64" textAnchor="middle" fill="#1c1917" fontSize="9.5" fontWeight="700" fontFamily="monospace">
+                        OHMMÈTRE ({range})
+                      </text>
+                      <text x="196" y="106" fill="#16a34a" fontSize="11" fontWeight="700" fontFamily="monospace">0Ω</text>
+                      <g transform={`translate(139, 134) rotate(${needleDeg})`} className="transition-transform duration-300 ease-out">
+                        <line x1="0" y1="0" x2="0" y2="-62" stroke="#dc2626" strokeWidth="2.8" strokeLinecap="round" />
+                        <circle cx="0" cy="0" r="5.5" fill="#0f172a" />
+                      </g>
+                      {/* Range Switch & Battery Polarity Legend */}
+                      <rect x="74" y="156" width="130" height="30" rx="5" fill="#0f172a" stroke="#475569" />
+                      <text x="139" y="175" textAnchor="middle" fill="#fbbf24" fontSize="10" fontWeight="700" fontFamily="monospace">
+                        CALIBRE {range.toUpperCase()}
+                      </text>
+                      <circle cx="94" cy="222" r="14" fill="#18181b" stroke="#e2e8f0" strokeWidth="2.5" />
+                      <text x="94" y="250" textAnchor="middle" fill="#e2e8f0" fontSize="9" fontWeight="700" fontFamily="monospace">
+                        NOIR (+)
+                      </text>
+                      <circle cx="184" cy="222" r="14" fill="#dc2626" stroke="#fecaca" strokeWidth="2.5" />
+                      <text x="184" y="250" textAnchor="middle" fill="#fca5a5" fontSize="9" fontWeight="700" fontFamily="monospace">
+                        ROUGE (−)
+                      </text>
+                    </g>
+
+                    {/* Unknown TO-92 Transistor Mounted on Right Test Socket */}
+                    <rect x="296" y="94" width="148" height="62" rx="8" fill="#18181b" stroke="#a1a1aa" strokeWidth="2" />
+                    <text x="370" y="122" textAnchor="middle" fill="#f4f4f5" fontSize="14" fontWeight="700" fontFamily="monospace">
+                      {rev ? (mystery === 'pnp_bce' ? 'PNP' : mystery === 'faulty' ? 'COURT-CIRCUIT' : 'NPN') : 'TRANSISTOR ???'}
+                    </text>
+                    <text x="370" y="141" textAnchor="middle" fill="#a1a1aa" fontSize="9" fontFamily="monospace">
+                      {rev ? 'Brochage révélé' : 'TO-92 Inconnu'}
+                    </text>
+
+                    {([1, 2, 3] as const).map((pin) => {
+                      const px = pinXs[pin];
+                      return (
+                        <g key={pin}>
+                          <line x1={px} y1="156" x2={px} y2="206" stroke="#cbd5e1" strokeWidth="4.5" />
+                          <circle cx={px} cy="206" r="7" fill="#d4af37" stroke="#1c1917" strokeWidth="1.2" />
+                          <text x={px} y="226" textAnchor="middle" fill="#fef08a" fontSize="10.5" fontWeight="700" fontFamily="monospace">
+                            {rev ? `${pin}:${labels[pin]}` : `P${pin}`}
+                          </text>
+                        </g>
+                      );
+                    })}
+
+                    {/* Test Lead Wires: Black (+) and Red (-) */}
+                    <path
+                      d={`M 94 222 L 94 270 L ${bX} 270 L ${bX} 206`}
+                      fill="none"
+                      stroke="#18181b"
+                      strokeWidth="5"
+                    />
+                    <path
+                      d={`M 94 222 L 94 270 L ${bX} 270 L ${bX} 206`}
+                      fill="none"
+                      stroke="#94a3b8"
+                      strokeWidth="2"
+                      strokeDasharray={sim.conducting ? '6 6' : undefined}
+                      className={sim.conducting ? 'flow-active' : ''}
+                    />
+                    <path
+                      d={`M 184 222 L 184 258 L ${rX} 258 L ${rX} 192`}
+                      fill="none"
+                      stroke="#dc2626"
+                      strokeWidth="4"
+                      className={sim.conducting ? 'flow-active' : ''}
+                    />
+
+                    {/* Probe Clips on Selected Pins */}
+                    <circle cx={bX} cy="206" r="9" fill="#0f172a" stroke="#fff" strokeWidth="2" />
+                    <circle cx={rX} cy="190" r="8.5" fill="#dc2626" stroke="#fecaca" strokeWidth="2" />
+
+                    {/* Optional Finger Bridge in x10k mode */}
+                    {range === 'x10k' && params.fingerCB && (
+                      <g>
+                        <rect x="316" y="42" width="112" height="32" rx="14" fill="#eab308" stroke="#fef08a" strokeWidth="2" />
+                        <text x="372" y="62" textAnchor="middle" fill="#1c1917" fontSize="10" fontWeight="700">
+                          Doigt C–B actif
+                        </text>
+                        <path d="M 370 74 L 370 94" stroke="#eab308" strokeWidth="3" strokeDasharray="3 3" />
+                      </g>
+                    )}
+                  </g>
+                );
+              })()
+            ) : isDarlingtonScene ? (
+              /* ================= CHAPTER 4 / CATALOG DARLINGTON 1/2/3 STAGES & MAINS HUM 50Hz ================= */
+              (() => {
+                const activeStages =
+                  cid === 'mains-hum' || cid === 'eight-million-gain' || (!cid && (params.exampleId === 'mains-hum' || params.exampleId === 'eight-million'))
+                    ? 3
+                    : cid === 'second-simplest' || (!cid && params.exampleId === 'second-simplest')
+                    ? 2
+                    : params.stages;
+                const vRailLabel = cid ? '+6 V' : '+9 V';
                 const qX = [175, 285, 395];
                 const topY = 114;
                 const padY = topY + 74; // 188
@@ -370,7 +535,7 @@ export const InteractiveBoard3D: React.FC<Props> = ({ params, sim, lang, onQuick
                       />
                     )}
                     <text x="102" y="38" fill="#fde047" fontSize="9.5" fontFamily="monospace" fontWeight="700">
-                      +9 V
+                      {vRailLabel}
                     </text>
 
                     {/* Bottom 0V Ground Rail (routed clean around ANT/Touch at x=50) */}
@@ -486,8 +651,8 @@ export const InteractiveBoard3D: React.FC<Props> = ({ params, sim, lang, onQuick
                       9V
                     </text>
 
-                    {/* Antenna / Touch Pad */}
-                    {params.exampleId === 'mains-hum' ? (
+                    {/* Antenna / Static Plate / Touch Pad */}
+                    {cid === 'mains-hum' || (!cid && params.exampleId === 'mains-hum') ? (
                       <g>
                         <rect x="70" y="164" width="38" height="62" rx="5" fill="#eab308" stroke="#fef08a" strokeWidth="2" />
                         <text x="89" y="199" textAnchor="middle" fill="#1c1917" fontSize="10" fontWeight="700">
@@ -495,6 +660,16 @@ export const InteractiveBoard3D: React.FC<Props> = ({ params, sim, lang, onQuick
                         </text>
                         {sim.conducting && (
                           <circle cx="89" cy="195" r="26" fill="none" stroke="#fde047" strokeWidth="2" strokeDasharray="4 4" />
+                        )}
+                      </g>
+                    ) : cid === 'eight-million-gain' || (!cid && params.exampleId === 'eight-million') ? (
+                      <g data-comp="STATIC" onClick={() => setInspected('STATIC')} className="cursor-pointer">
+                        <rect x="66" y="168" width="44" height="58" rx="6" fill="#0284c7" stroke="#bae6fd" strokeWidth="2" />
+                        <text x="88" y="199" textAnchor="middle" fill="#fff" fontSize="9" fontWeight="700" fontFamily="monospace">
+                          STATIC
+                        </text>
+                        {sim.conducting && (
+                          <circle cx="88" cy="197" r="28" fill="none" stroke="#38bdf8" strokeWidth="2" strokeDasharray="3 3" />
                         )}
                       </g>
                     ) : (
@@ -553,11 +728,12 @@ export const InteractiveBoard3D: React.FC<Props> = ({ params, sim, lang, onQuick
                   </g>
                 );
               })()
-            ) : params.chapterId === 6 && params.exampleId === 'chaser-3led' ? (
-              /* ================= CHAPTER 6A: 3-LED RING CHASER ================= */
+            ) : isChaserScene ? (
+              /* ================= CHAPTER 6A / CATALOG #15: 3-LED RING CHASER ================= */
               (() => {
                 const qX = [115, 260, 405];
-                const activeIdx = params.oscPhase % 3;
+                const rawIdx = params.oscPhase % 3;
+                const activeIdx = params.chaserReverse ? (3 - rawIdx) % 3 : rawIdx;
                 const topY = 114;
                 const padY = topY + 74; // 188
 
@@ -701,8 +877,8 @@ export const InteractiveBoard3D: React.FC<Props> = ({ params, sim, lang, onQuick
                   </g>
                 );
               })()
-            ) : params.chapterId === 6 && params.exampleId === 'flipflop-2led' ? (
-              /* ================= CHAPTER 6B: 2-LED ASTABLE MULTIVIBRATOR ================= */
+            ) : isFlipFlopScene ? (
+              /* ================= CHAPTER 6B / CATALOG #14: 2-LED ASTABLE MULTIVIBRATOR ================= */
               (() => {
                 const q1On = params.oscPhase % 2 === 0;
                 const q2On = !q1On;
@@ -839,8 +1015,8 @@ export const InteractiveBoard3D: React.FC<Props> = ({ params, sim, lang, onQuick
                   </g>
                 );
               })()
-            ) : params.chapterId === 6 && params.exampleId === 'siren-tick' ? (
-              /* ================= CHAPTER 6C: COMPLEMENTARY NPN + PNP SIREN OSCILLATOR ================= */
+            ) : isSirenScene ? (
+              /* ================= CHAPTER 6C / CATALOG #16: COMPLEMENTARY NPN + PNP SIREN OSCILLATOR ================= */
               (() => {
                 const pulse = params.oscPhase % 2 === 0;
                 const q1X = 148;
@@ -973,8 +1149,8 @@ export const InteractiveBoard3D: React.FC<Props> = ({ params, sim, lang, onQuick
                   </g>
                 );
               })()
-            ) : params.chapterId === 8 && params.exampleId === 'solar-charger' ? (
-              /* ================= CHAPTER 8A: SOLAR CHARGER WITH RELAY & Q1 PINS ================= */
+            ) : isSolarScene ? (
+              /* ================= CHAPTER 8A / CATALOG #20: SOLAR CHARGER WITH RELAY & Q1 PINS ================= */
               (() => {
                 const qX = 225;
                 const topY = 140;
@@ -1049,6 +1225,7 @@ export const InteractiveBoard3D: React.FC<Props> = ({ params, sim, lang, onQuick
                       {Array.from({ length: 28 }).map((_, i) => {
                         const col = i % 4;
                         const row = Math.floor(i / 4);
+                        const sunOp = 0.25 + ((params.sunIntensity ?? 90) / 100) * 0.75;
                         return (
                           <rect
                             key={i}
@@ -1058,11 +1235,12 @@ export const InteractiveBoard3D: React.FC<Props> = ({ params, sim, lang, onQuick
                             height="10.2"
                             rx="1.5"
                             fill="#3b82f6"
+                            opacity={sunOp}
                           />
                         );
                       })}
                       <text x="80" y="160" textAnchor="middle" fill="#fff" fontSize="10" fontWeight="700">
-                        18V (28 cel.)
+                        {(8 + ((params.sunIntensity ?? 90) / 100) * 10).toFixed(1)}V ({params.sunIntensity ?? 90}%)
                       </text>
                     </g>
 
@@ -1112,7 +1290,7 @@ export const InteractiveBoard3D: React.FC<Props> = ({ params, sim, lang, onQuick
                         100Ω 5W
                       </text>
                       <text x="417" y="96" textAnchor="middle" fill="#fed7aa" fontSize="9.5">
-                        {q1On && params.dummyLoadEnabled ? '3.24 W (Chaud)' : 'Dummy Load'}
+                        {q1On && params.dummyLoadEnabled ? `${(sim.powerW ?? 3.24).toFixed(2)} W` : 'Dummy Load'}
                       </text>
                     </g>
 
@@ -1143,8 +1321,8 @@ export const InteractiveBoard3D: React.FC<Props> = ({ params, sim, lang, onQuick
                   </g>
                 );
               })()
-            ) : params.chapterId === 8 && params.exampleId === 'constant-current' ? (
-              /* ================= CHAPTER 8B: 2-TRANSISTOR CONSTANT CURRENT REGULATOR ================= */
+            ) : isConstantCurrentScene ? (
+              /* ================= CHAPTER 8B / CATALOG #21: 2-TRANSISTOR CONSTANT CURRENT REGULATOR ================= */
               (() => {
                 const q1X = 165;
                 const q2X = 355;
@@ -1172,7 +1350,7 @@ export const InteractiveBoard3D: React.FC<Props> = ({ params, sim, lang, onQuick
                       0 V (−)
                     </text>
 
-                    {/* +V -> LED -> Q2 Collector (C = 381) */}
+                    {/* +V -> 1/2/3 Series LEDs -> Q2 Collector (C = 381) */}
                     <path
                       d={`M 381 40 L 381 ${padY}`}
                       stroke="#ff6b5a"
@@ -1182,17 +1360,25 @@ export const InteractiveBoard3D: React.FC<Props> = ({ params, sim, lang, onQuick
                       className={sim.conducting ? 'flow-active' : ''}
                       markerMid={sim.conducting ? 'url(#arrRed)' : undefined}
                     />
-                    <circle
-                      cx="381"
-                      cy="72"
-                      r="16"
-                      fill={ledGlow > 0.05 ? `rgba(251, 191, 36, ${0.28 + ledGlow * 0.72})` : '#422006'}
-                      stroke="#fde047"
-                      strokeWidth="2.5"
-                      filter={ledGlow > 0.1 ? 'url(#ledGlow)' : undefined}
-                    />
+                    {Array.from({ length: params.ledSeriesCount ?? 1 }).map((_, li) => {
+                      const count = params.ledSeriesCount ?? 1;
+                      const cy = count === 1 ? 72 : count === 2 ? 56 + li * 28 : 48 + li * 23;
+                      const r = count === 1 ? 16 : count === 2 ? 12 : 9.5;
+                      return (
+                        <circle
+                          key={li}
+                          cx="381"
+                          cy={cy}
+                          r={r}
+                          fill={ledGlow > 0.05 ? `rgba(251, 191, 36, ${0.28 + ledGlow * 0.72})` : '#422006'}
+                          stroke="#fde047"
+                          strokeWidth="2.2"
+                          filter={ledGlow > 0.1 ? 'url(#ledGlow)' : undefined}
+                        />
+                      );
+                    })}
                     <text x="415" y="76" fill="#fff" fontSize="10" fontWeight="700">
-                      LED
+                      {(params.ledSeriesCount ?? 1) > 1 ? `${params.ledSeriesCount}×LED` : 'LED'}
                     </text>
 
                     {/* +V -> 10k Bias Resistor -> Q2 Base (B = 355) & Q1 Collector (C = 191) */}
@@ -1259,7 +1445,7 @@ export const InteractiveBoard3D: React.FC<Props> = ({ params, sim, lang, onQuick
                 );
               })()
             ) : (
-              /* ================= VERSATILE SINGLE-TRANSISTOR PCB (CH 1, 2, 3, 5, 7, 9) ================= */
+              /* ================= VERSATILE SINGLE-TRANSISTOR / SPECIALIZED PCB ================= */
               (() => {
                 const qX = 275;
                 const topY = 114;
@@ -1270,9 +1456,62 @@ export const InteractiveBoard3D: React.FC<Props> = ({ params, sim, lang, onQuick
                 const pnpFlow = !isNpn;
                 const revFlow = pnpFlow && params.batteryReversed;
 
+                const isLdrScene =
+                  cid === 'schmitt-trigger' ||
+                  cid === 'night-light' ||
+                  (!cid && params.chapterId === 5 && (params.exampleId === 'dark-schmitt' || params.exampleId === 'night-light'));
+                const isClapScene =
+                  cid === 'sound-triggered-led' || (!cid && params.chapterId === 5 && params.exampleId === 'clap-sound');
+                const isPwmScene =
+                  cid === 'motor-speed-control' || (!cid && params.chapterId === 5 && params.exampleId === 'motor-pwm');
+                const isLatchScene =
+                  cid === 'touch-switch-globe' || (!cid && params.chapterId === 5 && params.exampleId === 'touch-latch');
+                const isCapScene =
+                  cid === 'courtesy-light' || (!cid && params.chapterId === 3);
+                const isRelayOutScene =
+                  cid === 'night-light' ||
+                  (!cid &&
+                    params.chapterId === 5 &&
+                    (params.exampleId === 'night-light' ||
+                      (params.exampleId === 'motor-relay' && params.loadKind === 'relay')));
+                const isMotorOutScene =
+                  isPwmScene ||
+                  (!cid && params.chapterId === 5 && params.exampleId === 'motor-relay' && params.loadKind === 'motor');
+                const isCoilScene =
+                  cid === 'led-torch-1v5' ||
+                  cid === 'bike-flasher-air' ||
+                  (!cid && params.chapterId === 7 && (params.exampleId === 'joule-thief' || params.exampleId === 'bike-flasher'));
+                const isBikeScene = cid === 'bike-flasher-air' || (!cid && params.chapterId === 7 && params.exampleId === 'bike-flasher');
+                const isTorchScene = cid === 'led-torch-1v5' || (!cid && params.chapterId === 7 && params.exampleId === 'joule-thief');
+                const isChargePumpScene = cid === 'led-on-1v5' || (!cid && params.chapterId === 7 && params.exampleId === 'charge-pump');
+                const isStaircaseScene = cid === 'lie-detector-staircase' || (!cid && params.chapterId === 1 && params.exampleId === 'staircase');
+                const isLogicProbeScene = cid === 'logic-probe' || (!cid && params.chapterId === 2 && params.exampleId === 'logic-probe');
+                const isPlantScene = cid === 'plant-watering' || (!cid && params.chapterId === 1 && params.exampleId === 'plant');
+                const isSelfBiasScene = cid === 'self-bias-ce' || (!cid && params.chapterId === 9);
+                const isReversedBat = (cid === 'simplest-tester' || (!cid && params.chapterId === 2)) && params.batteryReversed;
+
+                const batLabel =
+                  isChargePumpScene || isCoilScene
+                    ? `${params.cellVoltage.toFixed(1)}V`
+                    : isSelfBiasScene
+                    ? '5V'
+                    : cid === 'courtesy-light'
+                    ? '12V'
+                    : cid === 'night-light'
+                    ? `${params.supplySelect6or9 === 6 ? 6 : 12}V`
+                    : !cid && params.chapterId === 5 && params.exampleId === 'night-light'
+                    ? '12V'
+                    : isPwmScene || isPlantScene || isLogicProbeScene
+                    ? '3V'
+                    : cid === 'schmitt-trigger' || cid === 'touch-switch-globe' || cid === 'sound-triggered-led'
+                    ? '6V'
+                    : cid === 'worlds-simplest'
+                    ? `${params.supplySelect6or9 ?? 9}V`
+                    : '9V';
+
                 return (
                   <g>
-                    {/* +V Top Rail: Battery (+) -> Resistor -> Load -> Collector Pad C */}
+                    {/* +V Top Rail */}
                     <path d="M 96 62 L 420 62" stroke="#ffd24a" strokeWidth="4.5" opacity="0.35" fill="none" />
                     {sim.conducting && (
                       <path
@@ -1284,10 +1523,10 @@ export const InteractiveBoard3D: React.FC<Props> = ({ params, sim, lang, onQuick
                       />
                     )}
                     <text x="112" y="52" fill="#fde047" fontSize="9.5" fontFamily="monospace" fontWeight="700">
-                      {params.chapterId === 2 && params.batteryReversed ? '− Rail' : '+V Rail'}
+                      {isReversedBat ? '− Rail' : `+${batLabel} Rail`}
                     </text>
 
-                    {/* Collector / Output Load Path: Load at (420, 62) -> down right side -> enters Collector Pad C (301, 188) */}
+                    {/* Collector / Output Load Path */}
                     <path
                       d={`M 420 62 L 420 218 L ${pinC} 218 L ${pinC} ${padY}`}
                       stroke="#ff6b5a"
@@ -1306,7 +1545,7 @@ export const InteractiveBoard3D: React.FC<Props> = ({ params, sim, lang, onQuick
                       />
                     )}
 
-                    {/* Emitter Path: Emitter Pad E (249, 188) -> 0V Return -> Battery (-) */}
+                    {/* Emitter Path */}
                     <path
                       d={`M ${pinE} ${padY} L ${pinE} 264 L 66 264 L 66 112`}
                       stroke="#6fe39a"
@@ -1325,7 +1564,7 @@ export const InteractiveBoard3D: React.FC<Props> = ({ params, sim, lang, onQuick
                       />
                     )}
 
-                    {/* Base Path: Input Pad (70, 228) -> R1/Cap/LDR -> Base Pad B (275, 188) */}
+                    {/* Base Path */}
                     <path
                       d={`M 70 228 L ${pinB} 228 L ${pinB} ${padY}`}
                       stroke="#5ab0ff"
@@ -1344,20 +1583,20 @@ export const InteractiveBoard3D: React.FC<Props> = ({ params, sim, lang, onQuick
                       />
                     )}
 
-                    {/* Extra Joule Thief feedback coil link C -> B */}
-                    {params.chapterId === 7 && params.exampleId === 'joule-thief' && (
+                    {/* Extra Joule Thief / Bike Flasher feedback coil link C -> B */}
+                    {isCoilScene && (
                       <path
                         d={`M 326 62 L 326 104 L ${pinB} 104 L ${pinB} ${padY}`}
                         stroke="#fbbf24"
                         strokeWidth="2.6"
                         strokeDasharray="5 4"
                         fill="none"
-                        opacity="0.8"
+                        opacity={sim.conducting || params.openCircuitFault ? 0.95 : 0.35}
                       />
                     )}
 
-                    {/* Extra Charge Pump 1uF boost capacitor between Base/Collector & Output */}
-                    {params.chapterId === 7 && params.exampleId === 'charge-pump' && (
+                    {/* Extra Charge Pump 1uF boost capacitor */}
+                    {isChargePumpScene && (
                       <g data-comp="CAP" onClick={() => setInspected('CAP')} className="cursor-pointer">
                         <path
                           d={`M ${pinC} ${padY} L 355 ${padY} L 355 62`}
@@ -1378,15 +1617,15 @@ export const InteractiveBoard3D: React.FC<Props> = ({ params, sim, lang, onQuick
                     <g>
                       <rect x="38" y="40" width="58" height="72" rx="6" fill="#15803d" stroke="#bbf7d0" strokeWidth="2" />
                       <text x="67" y="72" textAnchor="middle" fill="#fff" fontSize="15" fontWeight="700" fontFamily="monospace">
-                        {params.chapterId === 2 && params.batteryReversed ? '−   +' : '+   −'}
+                        {isReversedBat ? '−   +' : '+   −'}
                       </text>
                       <text x="67" y="96" textAnchor="middle" fill="#dcfce7" fontSize="10" fontFamily="monospace">
-                        {params.chapterId === 7 ? `${params.cellVoltage.toFixed(1)}V` : params.chapterId === 9 ? '5V' : '9V'}
+                        {batLabel}
                       </text>
                     </g>
 
-                    {/* Base Component: Touch / LDR / Cap / 4M7 */}
-                    {params.chapterId === 5 && params.exampleId === 'dark-schmitt' ? (
+                    {/* Base Component */}
+                    {isLdrScene ? (
                       <g data-comp="LDR" onClick={() => setInspected('LDR')} className="cursor-pointer">
                         <circle cx="84" cy="228" r="21" fill="#b45309" stroke="#fde68a" strokeWidth="2" />
                         <path d="M 72 228 L 78 220 L 84 236 L 90 220 L 96 228" stroke="#fef3c7" strokeWidth="2.5" fill="none" />
@@ -1394,7 +1633,29 @@ export const InteractiveBoard3D: React.FC<Props> = ({ params, sim, lang, onQuick
                           LDR ({params.luxLevel}%)
                         </text>
                       </g>
-                    ) : params.chapterId === 5 && params.exampleId === 'touch-latch' ? (
+                    ) : isClapScene ? (
+                      <g>
+                        <circle cx="84" cy="228" r="18" fill="#334155" stroke="#94a3b8" strokeWidth="2" />
+                        <circle cx="84" cy="228" r="8" fill={params.clapActive ? '#fbbf24' : '#0f172a'} />
+                        <text x="84" y="201" textAnchor="middle" fill="#e2e8f0" fontSize="9.5" fontWeight="700">
+                          MIC ×{params.micGain ?? 2}
+                        </text>
+                        <rect x="136" y="218" width="56" height="19" rx="4" fill="#1d4ed8" stroke="#93c5fd" />
+                        <text x="164" y="231" textAnchor="middle" fill="#fff" fontSize="9.5" fontFamily="monospace" fontWeight="700">
+                          10µF
+                        </text>
+                      </g>
+                    ) : isPwmScene ? (
+                      <g data-comp="PWM" onClick={() => setInspected('PWM')} className="cursor-pointer">
+                        <rect x="52" y="211" width="76" height="34" rx="5" fill="#1e3a8a" stroke="#93c5fd" strokeWidth="1.8" />
+                        <text x="90" y="226" textAnchor="middle" fill="#fff" fontSize="9" fontWeight="700" fontFamily="monospace">
+                          PWM {params.pwmDuty}%
+                        </text>
+                        <text x="90" y="239" textAnchor="middle" fill="#bae6fd" fontSize="8" fontFamily="monospace">
+                          BC557 Osc
+                        </text>
+                      </g>
+                    ) : isLatchScene ? (
                       <g>
                         <g onClick={() => onQuickAction?.('latch-on')} className="cursor-pointer">
                           <rect x="44" y="182" width="42" height="24" rx="4" fill="#eab308" stroke="#fef08a" strokeWidth="1.5" />
@@ -1415,13 +1676,18 @@ export const InteractiveBoard3D: React.FC<Props> = ({ params, sim, lang, onQuick
                           </text>
                         </g>
                       </g>
-                    ) : params.chapterId === 3 ? (
+                    ) : isCapScene ? (
                       <g data-comp="CAP" onClick={() => setInspected('CAP')} className="cursor-pointer">
+                        {cid === 'courtesy-light' && (
+                          <text x="88" y="196" textAnchor="middle" fill="#fde68a" fontSize="9" fontWeight="700">
+                            {params.doorOpen ? 'Porte OUVERTE' : 'Porte FERMÉE'}
+                          </text>
+                        )}
                         <rect x="135" y="208" width="66" height="34" rx="6" fill="#1d4ed8" stroke="#93c5fd" strokeWidth="1.5" />
                         <rect
                           x="137"
                           y="210"
-                          width={Math.max(4, 62 * params.capCharge)}
+                          width={Math.max(4, 62 * (params.doorOpen ? 0.05 : params.capCharge))}
                           height="30"
                           rx="4"
                           fill="#38bdf8"
@@ -1435,27 +1701,45 @@ export const InteractiveBoard3D: React.FC<Props> = ({ params, sim, lang, onQuick
                       <g>
                         <circle cx="70" cy="228" r="14" fill="#eab308" stroke="#fef08a" strokeWidth="2" />
                         <text x="70" y="205" textAnchor="middle" fill="#fef08a" fontSize="9.5" fontWeight="600">
-                          {params.chapterId === 1 && params.exampleId === 'plant' ? 'Sonde' : 'Touch'}
+                          {isPlantScene ? 'Sonde' : 'Touch'}
                         </text>
                         <rect x="132" y="218" width="64" height="19" rx="4" fill="#e7d6ac" stroke="#78350f" />
                         <text x="164" y="231" textAnchor="middle" fill="#1c1917" fontSize="10" fontFamily="monospace" fontWeight="700">
-                          {params.chapterId === 9 ? 'RB' : 'R1'}
+                          {isSelfBiasScene ? 'RB' : isPlantScene ? '220k' : 'R1'}
                         </text>
                       </g>
                     )}
 
-                    {/* Central Transistor Package with exact E, B, C pins & live pin voltages */}
+                    {/* Central Transistor Package */}
                     <TransistorTO92
                       cx={qX}
                       topY={topY}
-                      label={isNpn ? 'BC547' : 'BC557'}
-                      sub={isNpn ? 'Q1 · NPN' : 'Q1 · PNP'}
-                      compId={isNpn ? 'Q1' : 'PNP'}
+                      label={
+                        cid === 'courtesy-light'
+                          ? 'BD679'
+                          : isPwmScene
+                          ? 'BC338'
+                          : isTorchScene
+                          ? 'BC337'
+                          : isNpn
+                          ? 'BC547'
+                          : 'BC557'
+                      }
+                      sub={
+                        cid === 'courtesy-light'
+                          ? 'BC557+BD679'
+                          : isPwmScene
+                          ? 'Q2 · PWM'
+                          : isNpn
+                          ? 'Q1 · NPN'
+                          : 'Q1 · PNP'
+                      }
+                      compId={cid === 'courtesy-light' ? 'DOME' : isNpn ? 'Q1' : 'PNP'}
                       isPnp={!isNpn}
                       active={sim.conducting}
-                      vE={params.chapterId === 2 && params.batteryReversed ? '9V' : '0V'}
+                      vE={isReversedBat ? '9V' : '0V'}
                       vB={
-                        params.chapterId === 2 && params.batteryReversed
+                        isReversedBat
                           ? `${(9 - sim.vbe).toFixed(2)}V`
                           : `${sim.vbe.toFixed(2)}V`
                       }
@@ -1464,30 +1748,43 @@ export const InteractiveBoard3D: React.FC<Props> = ({ params, sim, lang, onQuick
                     />
 
                     {/* Top Load Resistor or Inductor Coil */}
-                    {params.chapterId === 7 && params.exampleId === 'joule-thief' ? (
+                    {isCoilScene ? (
                       <g data-comp="COIL" onClick={() => setInspected('COIL')} className="cursor-pointer">
-                        <rect x="235" y="44" width="94" height="36" rx="6" fill="#44403c" stroke="#f59e0b" strokeWidth="2" />
+                        <rect x="230" y="44" width="104" height="36" rx="6" fill="#44403c" stroke="#f59e0b" strokeWidth="2" />
                         <path
-                          d="M 245 62 Q 255 46 265 62 T 285 62 T 305 62 T 320 62"
+                          d="M 240 62 Q 250 46 260 62 T 280 62 T 300 62 T 320 62"
                           stroke="#fbbf24"
                           strokeWidth="3"
                           fill="none"
                         />
                         <text x="282" y="34" textAnchor="middle" fill="#fde68a" fontSize="9.5" fontWeight="700">
-                          Bobine L1+L2
+                          {isBikeScene ? 'Bobine Air 30+30t' : 'Ferrite F29 L1+L2'}
+                        </text>
+                      </g>
+                    ) : isRelayOutScene ? (
+                      <g data-comp="RELAY" onClick={() => setInspected('RELAY')} className="cursor-pointer">
+                        <rect x="250" y="51" width="84" height="22" rx="4" fill="#1e293b" stroke="#38bdf8" />
+                        <text x="292" y="66" textAnchor="middle" fill="#bae6fd" fontSize="9.5" fontWeight="700" fontFamily="monospace">
+                          D1 1N4148
                         </text>
                       </g>
                     ) : (
                       <g data-comp="R220" onClick={() => setInspected('R220')} className="cursor-pointer">
                         <rect x="255" y="51" width="76" height="22" rx="4" fill="#e7d6ac" stroke="#78350f" />
                         <text x="293" y="66" textAnchor="middle" fill="#1c1917" fontSize="11" fontWeight="700" fontFamily="monospace">
-                          {params.chapterId === 9 ? 'RL 22k' : '220 Ω'}
+                          {isSelfBiasScene
+                            ? 'RL 22k'
+                            : isPwmScene
+                            ? 'Shunt 3V'
+                            : cid === 'courtesy-light'
+                            ? 'Bulb 12V'
+                            : '220 Ω'}
                         </text>
                       </g>
                     )}
 
                     {/* Output Load Component on Top Right */}
-                    {params.chapterId === 1 && params.exampleId === 'staircase' ? (
+                    {isStaircaseScene ? (
                       <g>
                         {[0, 1, 2, 3].map((i) => {
                           const lit = i < sim.staircaseLeds;
@@ -1509,7 +1806,7 @@ export const InteractiveBoard3D: React.FC<Props> = ({ params, sim, lang, onQuick
                           );
                         })}
                       </g>
-                    ) : params.chapterId === 2 && params.exampleId === 'logic-probe' ? (
+                    ) : isLogicProbeScene ? (
                       <g>
                         <circle
                           cx="396"
@@ -1536,21 +1833,21 @@ export const InteractiveBoard3D: React.FC<Props> = ({ params, sim, lang, onQuick
                           LOW
                         </text>
                       </g>
-                    ) : params.chapterId === 5 && params.exampleId === 'motor-relay' && params.loadKind === 'motor' ? (
+                    ) : isMotorOutScene ? (
                       <g>
                         <circle cx="420" cy="62" r="28" fill="#71717a" stroke="#e4e4e7" strokeWidth="2.5" />
                         <g
                           className={sim.conducting ? 'fan-spin' : ''}
-                          style={{ '--spin-speed': `${Math.max(0.25, 1.4 - sim.brightness * 1.1).toFixed(2)}s` } as React.CSSProperties}
+                          style={{ '--spin-speed': `${Math.max(0.22, 1.4 - sim.brightness * 1.15).toFixed(2)}s` } as React.CSSProperties}
                         >
                           <rect x="416" y="40" width="8" height="44" rx="3" fill="#fde047" />
                           <rect x="398" y="58" width="44" height="8" rx="3" fill="#fde047" />
                         </g>
                         <text x="420" y="104" textAnchor="middle" fill="#fff" fontSize="9.5" fontWeight="700">
-                          MOTEUR
+                          {isPwmScene ? 'MOTEUR 3V' : 'MOTEUR'}
                         </text>
                       </g>
-                    ) : params.chapterId === 5 && params.exampleId === 'motor-relay' && params.loadKind === 'relay' ? (
+                    ) : isRelayOutScene ? (
                       <g data-comp="RELAY" onClick={() => setInspected('RELAY')} className="cursor-pointer">
                         <rect
                           x="374"
@@ -1563,11 +1860,40 @@ export const InteractiveBoard3D: React.FC<Props> = ({ params, sim, lang, onQuick
                           strokeWidth="2"
                         />
                         <text x="419" y="60" textAnchor="middle" fill="#fff" fontSize="10.5" fontWeight="700">
-                          SONGLE 12V
+                          SONGLE {cid === 'night-light' && params.supplySelect6or9 === 6 ? '6V' : '12V'}
                         </text>
                         <text x="419" y="78" textAnchor="middle" fill="#dbeafe" fontSize="9.5">
                           {sim.conducting ? 'FERMÉ' : 'OUVERT'}
                         </text>
+                      </g>
+                    ) : isCoilScene && params.openCircuitFault ? (
+                      <g>
+                        <circle cx="420" cy="62" r="22" fill="#450a0a" stroke="#f43f5e" strokeWidth="2.5" strokeDasharray="4 3" />
+                        <text x="420" y="66" textAnchor="middle" fill="#fda4af" fontSize="11" fontWeight="700" fontFamily="monospace">
+                          {Math.round(sim.vc)}V!
+                        </text>
+                        <text x="420" y="98" textAnchor="middle" fill="#fda4af" fontSize="9" fontWeight="700">
+                          SURTENSION
+                        </text>
+                      </g>
+                    ) : isBikeScene ? (
+                      <g>
+                        {[396, 444].map((lx, idx) => (
+                          <g key={idx}>
+                            <circle
+                              cx={lx}
+                              cy={60}
+                              r="17"
+                              fill={sim.conducting ? '#f8fafc' : '#334155'}
+                              stroke="#fde047"
+                              strokeWidth="2.5"
+                              filter={sim.conducting ? 'url(#ledGlow)' : undefined}
+                            />
+                            <text x={lx} y="92" textAnchor="middle" fill="#fef08a" fontSize="8.5" fontWeight="700">
+                              LED {idx + 1}
+                            </text>
+                          </g>
+                        ))}
                       </g>
                     ) : (
                       <g>
@@ -1577,7 +1903,7 @@ export const InteractiveBoard3D: React.FC<Props> = ({ params, sim, lang, onQuick
                           r="21"
                           fill={
                             ledGlow > 0.04
-                              ? params.chapterId === 7 && params.exampleId === 'joule-thief'
+                              ? isTorchScene
                                 ? `rgba(248, 250, 252, ${0.35 + ledGlow * 0.65})`
                                 : `rgba(251, 191, 36, ${0.25 + ledGlow * 0.75})`
                               : '#422006'
@@ -1587,7 +1913,7 @@ export const InteractiveBoard3D: React.FC<Props> = ({ params, sim, lang, onQuick
                           filter={ledGlow > 0.08 ? 'url(#ledGlow)' : undefined}
                         />
                         <text x="420" y="98" textAnchor="middle" fill="#fff" fontSize="10" fontWeight="700">
-                          LED
+                          {isTorchScene ? 'TORCHE' : cid === 'courtesy-light' ? 'PLAFONNIER' : 'LED'}
                         </text>
                       </g>
                     )}
@@ -1599,9 +1925,16 @@ export const InteractiveBoard3D: React.FC<Props> = ({ params, sim, lang, onQuick
         </div>
 
         {/* Bottom Status Bar inside Mat */}
-        <div className="absolute bottom-3 left-3 right-3 z-20 flex items-center justify-between gap-2 pointer-events-none">
-          <div className="bg-black/65 backdrop-blur-xs text-stone-100 text-xs px-3 py-1.5 rounded-md font-medium">
-            {lang === 'fr' ? sim.statusFr : sim.statusAr}
+        <div className="absolute bottom-3 left-3 right-3 z-20 flex flex-wrap items-center justify-between gap-2 pointer-events-none">
+          <div className="flex flex-wrap items-center gap-2">
+            <div className="bg-black/70 backdrop-blur-xs text-stone-100 text-xs px-3 py-1.5 rounded-md font-medium">
+              {lang === 'fr' ? sim.statusFr : sim.statusAr}
+            </div>
+            {(sim.warningFr || sim.warningAr) && (
+              <div className="bg-rose-950/90 border border-rose-500/70 text-rose-200 text-xs px-3 py-1.5 rounded-md font-semibold">
+                {lang === 'fr' ? sim.warningFr : sim.warningAr}
+              </div>
+            )}
           </div>
           <div className="hidden sm:flex items-center gap-1.5 bg-black/55 text-stone-300 text-xs px-2.5 py-1.5 rounded-md">
             <MousePointerClick className="w-3.5 h-3.5" />

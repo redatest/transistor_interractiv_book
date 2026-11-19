@@ -5,6 +5,7 @@ import { CHAPTERS } from './data/chapters';
 import { CATALOG_CIRCUITS } from './data/catalog';
 import { ChapterWorkspace } from './components/ChapterWorkspace';
 import { CatalogView } from './components/CatalogView';
+import { CatalogLabView } from './components/CatalogLabView';
 import { ToolsView } from './components/ToolsView';
 
 export default function App() {
@@ -15,6 +16,7 @@ export default function App() {
   const [muted, setMuted] = useState<boolean>(false);
   const [activeChapterId, setActiveChapterId] = useState<number>(1);
   const [activeExampleId, setActiveExampleId] = useState<string | undefined>(undefined);
+  const [activeCatalogId, setActiveCatalogId] = useState<string>(CATALOG_CIRCUITS[0].id);
 
   useEffect(() => {
     const root = document.documentElement;
@@ -28,10 +30,10 @@ export default function App() {
     setActiveExampleId(exampleId);
   };
 
-  const handleLaunchInLab = (chapterId: number, exampleId?: string) => {
-    setActiveChapterId(chapterId);
-    setActiveExampleId(exampleId);
-    setView('chapters');
+  const handleLaunchCatalogSim = (circuitId: string) => {
+    setTeacherMode(false);
+    setActiveCatalogId(circuitId);
+    setView('catalog-sim');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -82,7 +84,7 @@ export default function App() {
                 setView('catalog');
               }}
               className={`py-2 text-sm font-medium border-b-2 transition-colors whitespace-nowrap shrink-0 cursor-pointer ${
-                view === 'catalog'
+                view === 'catalog' || view === 'catalog-sim'
                   ? 'border-amber-600 text-stone-950 dark:border-amber-400 dark:text-stone-50'
                   : 'border-transparent text-stone-600 hover:text-stone-900 dark:text-stone-400 dark:hover:text-stone-100'
               }`}
@@ -187,7 +189,19 @@ export default function App() {
           <CatalogView
             circuits={CATALOG_CIRCUITS}
             lang={lang}
-            onLaunchInLab={handleLaunchInLab}
+            onLaunchCatalogSim={handleLaunchCatalogSim}
+          />
+        )}
+
+        {view === 'catalog-sim' && (
+          <CatalogLabView
+            circuits={CATALOG_CIRCUITS}
+            activeCircuitId={activeCatalogId}
+            onSelectCircuit={setActiveCatalogId}
+            onBackToCatalog={() => setView('catalog')}
+            lang={lang}
+            muted={muted}
+            onToggleMute={() => setMuted((m) => !m)}
           />
         )}
 

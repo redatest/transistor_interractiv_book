@@ -5,7 +5,7 @@ import { CatalogCategory, CatalogCircuit, Lang } from '../types';
 interface Props {
   circuits: CatalogCircuit[];
   lang: Lang;
-  onLaunchInLab: (chapterId: number, exampleId?: string) => void;
+  onLaunchCatalogSim: (circuitId: string) => void;
 }
 
 const CATEGORIES: { id: CatalogCategory; fr: string; ar: string }[] = [
@@ -18,7 +18,7 @@ const CATEGORIES: { id: CatalogCategory; fr: string; ar: string }[] = [
   { id: 'testers', fr: 'Testeurs', ar: 'أجهزة فحص' },
 ];
 
-export const CatalogView: React.FC<Props> = ({ circuits, lang, onLaunchInLab }) => {
+export const CatalogView: React.FC<Props> = ({ circuits, lang, onLaunchCatalogSim }) => {
   const [cat, setCat] = useState<CatalogCategory>('all');
   const [query, setQuery] = useState('');
 
@@ -120,7 +120,7 @@ export const CatalogView: React.FC<Props> = ({ circuits, lang, onLaunchInLab }) 
                 </span>
                 <button
                   type="button"
-                  onClick={() => onLaunchInLab(item.linkedChapterId, item.linkedExampleId)}
+                  onClick={() => onLaunchCatalogSim(item.id)}
                   className="px-3 py-1.5 rounded-lg bg-stone-900 hover:bg-stone-800 dark:bg-amber-500 dark:hover:bg-amber-400 text-white dark:text-stone-950 text-xs font-semibold flex items-center gap-1.5 shrink-0 cursor-pointer whitespace-nowrap transition-colors"
                 >
                   <Play className="w-3 h-3 fill-current" />

@@ -295,12 +295,32 @@ export const CHAPTERS: ChapterDef[] = [
         components: ['1 à 3×BC547', '1M', '100k', '220R', 'LED', '6V'],
       },
       {
-        id: 'mains-hum',
-        pageRef: 'p. 28–29',
-        title: { fr: 'Détecteur de champ statique & 50Hz', ar: 'كاشف الكهرباء الساكنة وطنين 50Hz' },
+        id: 'second-simplest',
+        pageRef: 'p. 28',
+        title: { fr: 'Second Simplest (Paire Darlington ×40k)', ar: 'ثاني أبسط دارة (زوج دارلنغتون ×40k)' },
         summary: {
-          fr: 'Approchez votre main ou un câble secteur sous tension (sans dénuder !) : dès 2–5 cm, les 3 étages captent le champ et allument la LED + buzzer piézo.',
-          ar: 'قرّب يدك أو كابلاً كهربائياً مغلّفاً (دون لمس النحاس!): على بعد 2cm تلتقط المراحل الثلاث المجال وتُضيء الـ LED مع صافرة البيزو.',
+          fr: 'Deux BC547 câblés en paire Super-Alpha : β = 200 × 200 = 40 000. Le plus léger effleurement suffit à illuminer la LED.',
+          ar: 'ترانزستورا BC547 في زوج دارلنغتون (×40 000): يكفي أخفّ تلامس لإضاءة الـ LED بالكامل.',
+        },
+        components: ['2×BC547', '100k', '220R', 'LED', '6V'],
+      },
+      {
+        id: 'eight-million',
+        pageRef: 'p. 28',
+        title: { fr: '8 Million Gain (Détecteur statique)', ar: 'تضخيم ٨ ملايين (كاشف الكهرباء الساكنة)' },
+        summary: {
+          fr: 'Trois BC547 en cascade (200³ = 8 000 000) : détecte l’électricité statique d’une main ou d’une règle plastique à plusieurs centimètres.',
+          ar: 'ثلاث مراحل متتالية (×8 ملايين): تلتقط الشحنة الساكنة لليد أو البلاستيك عن بُعد عدة سنتيمترات دون لمس.',
+        },
+        components: ['3×BC547', '1M', '100k', '220R', 'LED', '6V'],
+      },
+      {
+        id: 'mains-hum',
+        pageRef: 'p. 29',
+        title: { fr: 'Détecteur de câbles secteur 50Hz', ar: 'كاشف أسلاك الكهرباء 50Hz' },
+        summary: {
+          fr: 'Approchez l’antenne PCB d’un câble secteur sous tension (sans dénuder !) : dès 2–5 cm, les 3 étages captent le ronflement 50 Hz et activent le buzzer piézo.',
+          ar: 'قرّب الهوائي من سلك كهرباء منزلي (دون لمس النحاس): على بعد 2cm تلتقط المراحل الثلاث طنين 50Hz وتفعّل الصفارة.',
         },
         components: ['3×BC547', '1M', '100k', '220R', 'Piezo + LED', 'Antenne PCB'],
       },
@@ -373,12 +393,22 @@ export const CHAPTERS: ChapterDef[] = [
         components: ['3×BC547', 'BC557', '4M7', '470k', '4k7', '10k', '6V'],
       },
       {
-        id: 'dark-schmitt',
-        pageRef: 'p. 71 & p. 120',
-        title: { fr: 'Veilleuse LDR & Trigger de Schmitt', ar: 'مصباح الليل LDR وقادح شميت (ص ١٢٠)' },
+        id: 'night-light',
+        pageRef: 'p. 71',
+        title: { fr: 'Veilleuse automatique (LDR + Relais)', ar: 'مصباح الليل التلقائي (LDR + مرحّل)' },
         summary: {
-          fr: 'Faites varier l’éclairage ambiant (Lux) : sous le seuil bas la LED/bande s’allume franchement ; il faut remonter plus haut pour l’éteindre (hystérésis).',
-          ar: 'حرّك منزلق الإضاءة: عند حلول الظلام يشتعل المصباح فوراً، وبفضل الهسترة لا ينطفئ إلا عند إضاءة أقوى.',
+          fr: 'Une photorésistance ORP12 pilote une paire BC557 + BC547 qui colle un relais 12 V (protégé par diode D1) dès que la lumière baisse sous le seuil réglé.',
+          ar: 'تقود المقاومة الضوئية ORP12 زوج BC557 + BC547 لتشغيل مرحّل 12V عند حلول الظلام.',
+        },
+        components: ['LDR ORP12', 'BC557', 'BC547', '1M', '10k', 'Relais 12V'],
+      },
+      {
+        id: 'dark-schmitt',
+        pageRef: 'p. 120',
+        title: { fr: 'Trigger de Schmitt (hystérésis LDR)', ar: 'قادح شميت بالهسترة (ص ١٢٠)' },
+        summary: {
+          fr: '3×BC547 avec boucle d’émetteur commune : sous le seuil bas (30 %) la LED s’allume franchement ; il faut remonter à 55 % pour l’éteindre.',
+          ar: 'ثلاثة ترانزستورات بهسترة حقيقية: يشتعل عند 30% ظلام ولا ينطفئ إلا عند إضاءة 55% لمنع الارتعاش.',
         },
         components: ['LDR ORP12', '3×BC547', '22k', '4k7', '330R', '6V'],
       },
@@ -394,13 +424,23 @@ export const CHAPTERS: ChapterDef[] = [
       },
       {
         id: 'motor-relay',
-        pageRef: 'p. 43 & p. 62',
+        pageRef: 'p. 43',
         title: { fr: 'Pilotage Moteur & Relais avec D1', ar: 'تشغيل محرك أو مرحّل مع دايود الحماية' },
         summary: {
           fr: 'Un BC338 (800 mA) pilote un moteur ou un relais 12 V. Notez la diode 1N4148 en parallèle sur la bobine pour absorber les pics de surtension à la coupure.',
           ar: 'يتحكم الترانزستور بمحرك أو مرحّل، ويحمي الدايود 1N4148 الترانزستور من شرارة الارتداد المغناطيسي عند الفصل.',
         },
         components: ['BC338', 'Relais / Moteur', '1N4148', '10k', '12V'],
+      },
+      {
+        id: 'motor-pwm',
+        pageRef: 'p. 62',
+        title: { fr: 'Variateur vitesse moteur (PWM 3V)', ar: 'متحكّم سرعة المحرك بالنبضات (ص ٦٢)' },
+        summary: {
+          fr: 'Paire BC557 + BC338 envoyant des impulsions pleine puissance au moteur 3 V : il conserve un fort couple de démarrage même à basse vitesse.',
+          ar: 'زوج BC557 + BC338 يرسل نبضات كاملة العزم لمحرك 3V ليبدأ الدوران بسلاسة حتى عند السرعات البطيئة.',
+        },
+        components: ['BC557', 'BC338', '100u', '47R', '22k', 'Moteur 3V'],
       },
     ],
     prediction: {
@@ -560,14 +600,24 @@ export const CHAPTERS: ChapterDef[] = [
         components: ['3×BC547', '1u', '2×10n', '100R', 'LED Rouge', '1.5V'],
       },
       {
-        id: 'joule-thief',
-        pageRef: 'p. 36–38 & p. 103',
-        title: { fr: 'Torche LED Blanche 1,5 V / Bobine à air', ar: 'مصباح LED أبيض من 1.5V (ص ٣٦ و١٠٣)' },
+        id: 'bike-flasher',
+        pageRef: 'p. 36',
+        title: { fr: 'Feu vélo 1,5 V (Bobine sans noyau · 2 LEDs)', ar: 'ومّاض دراجة 1.5V بملف هوائي (ص ٣٦)' },
         summary: {
-          fr: 'Ajustez la tension de pile (de 0,9 V à 1,5 V) et voyez comment la bobine (30+30 spires) génère des impulsions de > 3,4 V qui maintiennent la LED blanche brillante.',
-          ar: 'حرّك جهد البطارية (حتى 0.9V!) وشاهد نبضات الانهيار المغناطيسي في الملف ترفع الجهد فوق 3.4V لتشغيل الـ LED الأبيض.',
+          fr: 'Une simple bobine à air (30+30 spires, sans ferrite !) et un condensateur 10 µF font clignoter 2 LEDs blanches en série sous 1,5 V.',
+          ar: 'ملف هوائي بدون قلب فيريت (30+30 لفة) ومكثف 10µF يومضان مصباحَي LED أبيضين من خلية 1.5V.',
         },
-        components: ['BC337 / BC547', 'Bobine 60t+40t', '2k7', '10n', 'LED Blanche', '1.5V'],
+        components: ['BC547', 'Bobine 30t+30t air', '10u', '100k', '2×LED Blanche', '1.5V'],
+      },
+      {
+        id: 'joule-thief',
+        pageRef: 'p. 103',
+        title: { fr: 'Torche LED Blanche 1,5 V (Ferrite F29)', ar: 'كشّاف LED أبيض 1.5V بقلب فيريت (ص ١٠٣)' },
+        summary: {
+          fr: 'Avec noyau ferrite F29 (60t+40t) et BC337 : oscille à haute fréquence pour fournir un faisceau blanc continu très lumineux jusqu’à 0,85 V.',
+          ar: 'بقلب الفيريت F29 وترانزستور BC337 يتذبذب بسرعة عالية ليضيء كشّاف LED أبيض ساطعاً حتى هبوط البطارية إلى 0.85V.',
+        },
+        components: ['BC337', 'Ferrite F29 60t+40t', '2k7', '10n', 'LED Blanche', '1.5V'],
       },
     ],
     prediction: {

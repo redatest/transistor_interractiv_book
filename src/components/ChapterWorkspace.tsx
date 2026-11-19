@@ -74,6 +74,7 @@ export const ChapterWorkspace: React.FC<Props> = ({
     clapActive: false,
     vinSwitch: 0.4,
     loadKind: 'motor',
+    pwmDuty: 55,
     oscPhase: 0,
     oscSpeedR: 15,
     pumpPhase: 'A',
@@ -127,14 +128,15 @@ export const ChapterWorkspace: React.FC<Props> = ({
     return () => window.clearInterval(timer);
   }, [params.chapterId, params.capTriggered, params.capCharge, params.capValueUF]);
 
-  // Ch 6 Multivibrator / Chaser oscillation timer
+  // Ch 6 Multivibrator / Chaser & Ch 7 Bike Flasher oscillation timer
   useEffect(() => {
-    if (params.chapterId !== 6) return;
-    const ms = Math.max(160, Math.min(1100, params.oscSpeedR * 28));
+    const isBikeFlasher = params.chapterId === 7 && params.exampleId === 'bike-flasher';
+    if (params.chapterId !== 6 && !isBikeFlasher) return;
+    const ms = isBikeFlasher ? 450 : Math.max(160, Math.min(1100, params.oscSpeedR * 28));
     const timer = window.setInterval(() => {
       setParams((prev) => {
         const nextPhase = (prev.oscPhase + 1) % 6;
-        if (prev.exampleId === 'siren-tick') {
+        if (prev.chapterId === 6 && prev.exampleId === 'siren-tick') {
           const pitch = 380 + (nextPhase % 3) * 180;
           playTickSound(muted, pitch, 0.04);
         }
@@ -425,6 +427,7 @@ export const ChapterWorkspace: React.FC<Props> = ({
           )}
           {stageView === 'analogy' && (
             <WaterValveAnalogy
+              params={params}
               sim={sim}
               lang={lang}
               analogyTitle={chapter.analogyTitle[lang]}
@@ -585,13 +588,21 @@ export const ChapterWorkspace: React.FC<Props> = ({
               </div>
             )}
 
-            {/* CH 4 Controls (Darlington & 8 Million Gain) */}
+            {/* CH 4 Controls (Darlington, Second Simplest, 8M Static & Mains Hum 50Hz) */}
             {chapter.id === 4 && (
               <div className="flex flex-col gap-3">
-                {params.exampleId === 'mains-hum' ? (
+                {params.exampleId === 'mains-hum' || params.exampleId === 'eight-million' ? (
                   <label className="flex flex-col gap-1.5 text-sm">
                     <div className="flex justify-between font-medium">
-                      <span>{lang === 'fr' ? 'Distance main / câble secteur (cm)' : 'بُعد اليد / السلك عن الهوائي (cm)'}</span>
+                      <span>
+                        {params.exampleId === 'eight-million'
+                          ? lang === 'fr'
+                            ? 'Distance main / objet statique (cm)'
+                            : 'بُعد اليد / الجسم المشحون (cm)'
+                          : lang === 'fr'
+                          ? 'Distance main / câble secteur (cm)'
+                          : 'بُعد اليد / السلك عن الهوائي (cm)'}
+                      </span>
                       <span className="font-mono-num text-amber-700 dark:text-amber-400">{params.proximityCm} cm</span>
                     </div>
                     <input
@@ -605,22 +616,30 @@ export const ChapterWorkspace: React.FC<Props> = ({
                   </label>
                 ) : (
                   <>
-                    <div className="flex flex-wrap gap-2">
-                      {([1, 2, 3] as const).map((n) => (
-                        <button
-                          key={n}
-                          type="button"
-                          onClick={() => setParams((p) => ({ ...p, stages: n }))}
-                          className={`px-3 py-1.5 rounded-lg text-xs font-semibold border cursor-pointer whitespace-nowrap ${
-                            params.stages === n
-                              ? 'bg-stone-900 text-white border-stone-900 dark:bg-amber-400 dark:text-stone-950'
-                              : 'border-stone-300 dark:border-stone-700'
-                          }`}
-                        >
-                          {n} {lang === 'fr' ? (n === 1 ? 'transistor (200×)' : `transistors (${Math.pow(200, n).toLocaleString('fr-FR')}×)`) : 'ترانزستور'}
-                        </button>
-                      ))}
-                    </div>
+                    {params.exampleId === 'second-simplest' ? (
+                      <div className="text-xs font-mono-num px-3 py-2 rounded-lg bg-amber-50 dark:bg-amber-950/30 border border-amber-500/30 text-amber-800 dark:text-amber-300">
+                        {lang === 'fr'
+                          ? 'Paire Darlington fixe : 2 transistors BC547 (Gain β = 200 × 200 = 40 000×)'
+                          : 'ثنائي دارلنغتون ثابت: ترانزستوران BC547 (تضخيم ×40 000)'}
+                      </div>
+                    ) : (
+                      <div className="flex flex-wrap gap-2">
+                        {([1, 2, 3] as const).map((n) => (
+                          <button
+                            key={n}
+                            type="button"
+                            onClick={() => setParams((p) => ({ ...p, stages: n }))}
+                            className={`px-3 py-1.5 rounded-lg text-xs font-semibold border cursor-pointer whitespace-nowrap ${
+                              params.stages === n
+                                ? 'bg-stone-900 text-white border-stone-900 dark:bg-amber-400 dark:text-stone-950'
+                                : 'border-stone-300 dark:border-stone-700'
+                            }`}
+                          >
+                            {n} {lang === 'fr' ? (n === 1 ? 'transistor (200×)' : `transistors (${Math.pow(200, n).toLocaleString('fr-FR')}×)`) : 'ترانزستور'}
+                          </button>
+                        ))}
+                      </div>
+                    )}
                     <label className="flex flex-col gap-1.5 text-sm">
                       <div className="flex justify-between font-medium">
                         <span>{lang === 'fr' ? 'Effleurement d’entrée' : 'قوة اللمس'}</span>
@@ -709,6 +728,45 @@ export const ChapterWorkspace: React.FC<Props> = ({
                       {lang === 'fr' ? 'Clapper des mains ! (Impulsion 2,4 s)' : 'صفّق بيديك! (إضاءة مؤقتة)'}
                     </button>
                   </div>
+                )}
+
+                {params.exampleId === 'night-light' && (
+                  <label className="flex flex-col gap-1.5 text-sm">
+                    <div className="flex justify-between font-medium">
+                      <span>{lang === 'fr' ? 'Luminosité sur la LDR (Veilleuse 12 V)' : 'شدة الإضاءة على LDR (مصباح ليلي 12V)'}</span>
+                      <span className="font-mono-num">
+                        {params.luxLevel}% · {params.luxLevel <= 40 ? 'Relais COLLÉ (ON)' : 'Relais OUVERT (OFF)'}
+                      </span>
+                    </div>
+                    <input
+                      type="range"
+                      min={0}
+                      max={100}
+                      value={params.luxLevel}
+                      onChange={(e) => setParams((p) => ({ ...p, luxLevel: Number(e.target.value) }))}
+                      className="w-full accent-amber-600 cursor-pointer"
+                    />
+                  </label>
+                )}
+
+                {params.exampleId === 'motor-pwm' && (
+                  <label className="flex flex-col gap-1.5 text-sm">
+                    <div className="flex justify-between font-medium">
+                      <span>{lang === 'fr' ? 'Rapport cyclique PWM (Moteur 3 V)' : 'نسبة نبضات PWM (محرك 3V)'}</span>
+                      <span className="font-mono-num text-amber-700 dark:text-amber-400">
+                        {params.pwmDuty}% · {sim.icMA.toFixed(0)} mA
+                      </span>
+                    </div>
+                    <input
+                      type="range"
+                      min={10}
+                      max={100}
+                      step={5}
+                      value={params.pwmDuty}
+                      onChange={(e) => setParams((p) => ({ ...p, pwmDuty: Number(e.target.value) }))}
+                      className="w-full accent-amber-600 cursor-pointer"
+                    />
+                  </label>
                 )}
 
                 {params.exampleId === 'motor-relay' && (

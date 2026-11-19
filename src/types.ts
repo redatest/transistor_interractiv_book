@@ -1,6 +1,6 @@
 export type Lang = 'fr' | 'ar';
 
-export type AppView = 'chapters' | 'catalog' | 'tools';
+export type AppView = 'chapters' | 'catalog' | 'catalog-sim' | 'tools';
 
 export interface BiText {
   fr: string;
@@ -63,6 +63,6 @@ export interface CatalogCircuit {
   supply: string;
   parts: string[];
   concept: BiText;
-  linkedChapterId: number;
-  linkedExampleId?: string;
+  analogyTitle: BiText;
+  analogyText: BiText;
 }
